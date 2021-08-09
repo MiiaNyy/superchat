@@ -1,11 +1,23 @@
 import React from 'react';
 
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from '../firebase'
+
+import ChatRoom from "./ChatRoom";
+import SignInSection from "./SignIn";
+
 function App() {
+    const [user, loading] = useAuthState(auth); // true if firebase.User is logged in, false if not
+
     return (
-        <div>
-            <h1>Hellohellohello</h1>
-        </div>
+        <main>
+            <header>
+                <h1>Super Chat</h1>
+            </header>
+            { loading ? <p>LOADING</p> : user ? <ChatRoom/> : <SignInSection/> }
+        </main>
     );
 }
+
 
 export default App;
