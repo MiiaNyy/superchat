@@ -14,7 +14,7 @@ main {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1em;
+    padding: 1em 1em 0;
     color: #e7e7e7;
     border: 2px solid palevioletred;
 }
@@ -35,6 +35,26 @@ button {
 button:hover {
     opacity: 0.8;
     transform: scale(1.1);
+}
+
+form {
+
+    margin-bottom: 1em;
+    border: 2px solid yellow;
+}
+
+input, form button {
+    padding: 0.5em 0.6em;
+}
+input {
+    width: 90%;
+    border-bottom: 2px solid palevioletred;
+}
+
+form button {
+    width: 10%;
+    margin-left: auto;
+    margin-right: 0;
 }
 
 /*---TYPOGRAPHY---*/
@@ -66,7 +86,7 @@ h1 {
 
 .msgReceived, .msgSent {
     width: fit-content;
-    max-width: 50%;
+    max-width: 90%;
     padding: 0.5em 1em;
     border-radius: 25px;
     color: #292A34;

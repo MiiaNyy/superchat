@@ -1,19 +1,31 @@
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import firebase from "firebase";
 
-function ChatRoom() {
-    const [user] = useAuthState(auth);
+function ChatRoom(props) {
+
     const [formValue, setFormValue] = useState('');
 
+    const scrollDownRef = useRef();
+
     const messagesRef = db.collection('messages');
-    const query = messagesRef.orderBy('createdAt').limit(5);
+    const query = messagesRef.orderBy('createdAt').limit(50);
 
     const [messages] = useCollectionData(query, {idField: 'id'});
+    const [user] = useAuthState(auth);
 
-    // writes new document to firestore
+    useEffect(()=>{
+        document.getElementById('scrollWhenFirstRenders').scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+            inline: "nearest"
+        });
+    })
+
+
+// writes new document to firestore
     async function sendMessage(e) {
         e.preventDefault();
         const {uid, photoURL} = auth.currentUser;
@@ -27,6 +39,7 @@ function ChatRoom() {
 
         });
         setFormValue('');
+        scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
 
     }
 
@@ -38,10 +51,13 @@ function ChatRoom() {
             <h3>Messages:</h3>
             { messages && messages.map(msg=><ChatMessage key={ msg.id } message={ msg }/>) }
 
+
             <form onSubmit={ (e)=>sendMessage(e, messagesRef) }>
-                <input type="text" value={ formValue } onChange={ (e)=>setFormValue(e.target.value) }/>
+                <input type="text" placeholder="Send message..." value={ formValue }
+                       onChange={ (e)=>setFormValue(e.target.value) }/>
                 <button type="submit">Send</button>
             </form>
+            <div id="scrollDown" ref={ scrollDownRef }/>
         </>
     )
 }
@@ -55,7 +71,6 @@ function ChatMessage(props) {
     return (
         <div className="message">
             <div className={ messageClass }>
-                <img src={ photoURL } alt=""/>
                 < p> { text }</p>
             </div>
         </div>
