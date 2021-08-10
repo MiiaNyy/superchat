@@ -6,10 +6,15 @@ import { auth } from "../firebase";
 function SignInSection() {
 
     return (
-        <section className="signInSection">
-            <p>Please sign in</p>
-            <button onClick={ signInWithGoogle }>Sign in</button>
-        </section>
+        <>
+            <header>
+                <h1>Super Chat</h1>
+            </header>
+            <section className="signInSection">
+                <p>Please sign in</p>
+                <button onClick={ signInWithGoogle }>Sign in</button>
+            </section>
+        </>
     )
 }
 
@@ -24,7 +29,7 @@ function signInWithGoogle() {
 }
 
 function isMobileDevice() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         return true
     }
 }

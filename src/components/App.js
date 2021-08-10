@@ -12,13 +12,8 @@ function App() {
     return (
         <>
             <main>
-                <header>
-                    <h1>Super Chat</h1>
-                </header>
                 { loading ? <p>LOADING</p> : user ? <ChatRoom/> : <SignInSection/> }
-
             </main>
-            <div id="scrollWhenFirstRenders"/>
         </>
     );
 }
