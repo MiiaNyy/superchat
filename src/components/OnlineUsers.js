@@ -3,12 +3,12 @@ import { auth, db } from "../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 
+import User from "./User";
 
-function OnlineUsers(props) {
-    const messagesRef = db.collection('users');
-    const query = messagesRef.orderBy('createdAt').limit(50);
+function OnlineUsers() {
+    const usersRef = db.collection('users');
+    const query = usersRef.orderBy('createdAt').limit(50);
     const [users] = useCollectionData(query, {idField: 'id'});
-
     const {uid, displayName} = auth.currentUser;
 
     const [docIsUpdatedOnce, setDocIsUpdatedOnce] = useState(false);
@@ -17,17 +17,16 @@ function OnlineUsers(props) {
     useEffect(()=>{
         if ( !docIsUpdatedOnce ) {
             console.log('mounted');
-            const updateDoc = updateOrAddUser()
-
+            const updateOrAddDoc = updateOrAddUser()
             return ()=>console.log('unmounting...');
         }
     }, []);
 
+    // updates current users lastSeen value, every 10s
     useEffect(()=>{
         if ( docIsUpdatedOnce ) {
-            console.log('doc is updated at least once')
             const interval = setInterval(()=>{
-                db.collection("users").get().then((querySnapshot)=>{
+                usersRef.get().then((querySnapshot)=>{
                     querySnapshot.forEach((doc)=>{
                         if ( doc.data().uid === uid && doc.data().name === displayName ) {
                             updateUserDocument(doc);
@@ -41,7 +40,7 @@ function OnlineUsers(props) {
 
     async function updateOrAddUser() {
 
-        db.collection("users").get().then((querySnapshot)=>{
+        usersRef.get().then((querySnapshot)=>{
             querySnapshot.forEach((doc)=>{
                 if ( doc.data().uid === uid && doc.data().name === displayName ) {
                     updateUserDocument(doc);
@@ -50,12 +49,11 @@ function OnlineUsers(props) {
             setDocIsUpdatedOnce(()=>true);
         });
 
-        const docRef = db.collection("users").doc(uid);
-
-        docRef.get().then((doc)=>{
+        usersRef.doc(uid).get().then((doc)=>{
             if ( !doc.exists ) {
                 addNewUserDocument();
-                console.log("No such document! Creating one");            }
+                console.log("No such document! Creating one");
+            }
         }).catch((error)=>{
             console.log("Error getting document:", error);
         });
@@ -66,33 +64,10 @@ function OnlineUsers(props) {
             <h2>People that are online</h2>
             <p>Current user name</p>
             { users && users.map((user)=>{
-                if ( user.name !== displayName ) {
-                    return <User key={ user.id } user={ user }/>
-                } else {
-                    return <></>
-                }
-
+                return user.name !== displayName ? <User key={ user.id } user={ user }/> : <></>;
             }) }
         </section>
     );
-}
-
-function User(props) {
-    const user = props.user;
-
-    const currentTimestamp = new Date() / 1000;
-    const userLastSeen = getUsersLastVisit(user);
-
-    const fiveMinutesAgo = 60 * 5;
-
-    if ( userLastSeen >= (currentTimestamp - fiveMinutesAgo) ) {
-        return (
-            <p>{ user.name }</p>
-        )
-    } else {
-        return <></>
-    }
-
 }
 
 function addNewUserDocument() {
@@ -113,8 +88,7 @@ function addNewUserDocument() {
 }
 
 function updateUserDocument(doc) {
-    const updateDoc = db.collection("users").doc(doc.id);
-    updateDoc.update({
+    db.collection("users").doc(doc.id).update({
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
     })
         .then(()=>{
@@ -124,14 +98,6 @@ function updateUserDocument(doc) {
             // The document probably doesn't exist.
             console.error("Error updating document: ", error);
         });
-}
-
-function getUsersLastVisit(user) {
-    if ( user.lastSeen ) {
-        const userLastSeenString = user.lastSeen.seconds + '.' + user.lastSeen.nanoseconds;
-        return Number(userLastSeenString);
-    }
-
 }
 
 

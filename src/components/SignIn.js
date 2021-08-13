@@ -22,9 +22,17 @@ function SignInSection() {
 function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     if ( isMobileDevice() ) {
-        auth.signInWithRedirect(provider);
+        auth.signInWithRedirect(provider).then(()=> {
+            console.log('Redirecting to google authentication successful')
+        }).catch((error)=>{
+            console.log("Error redirecting:", error);
+        });
     } else {
-        auth.signInWithPopup(provider);
+        auth.signInWithPopup(provider).then(()=> {
+            console.log('Opening pop-up to google authentication successful')
+        }).catch((error)=>{
+            console.log("Error getting pop up:", error);
+        });
     }
 }
 

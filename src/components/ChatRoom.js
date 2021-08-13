@@ -3,8 +3,10 @@ import { auth, db } from "../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import firebase from "firebase";
+
 import SendImageMsg from "./SendImageMsg";
 import OnlineUsers from "./OnlineUsers";
+import UserSettingsPopUp from "./UserSettingsPopUp";
 
 function ChatRoom(props) {
     const [formValue, setFormValue] = useState('');
@@ -66,11 +68,10 @@ function ChatRoom(props) {
 
             </section>
 
-
+            <UserSettingsPopUp/>
         </>
     )
 }
-
 
 function ChatMessage(props) {
     const {text, uid, photoURL, imageUrl} = props.message;
