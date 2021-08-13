@@ -6,11 +6,13 @@ import firebase from "firebase";
 
 import SendImageMsg from "./SendImageMsg";
 import OnlineUsers from "./OnlineUsers";
-import UserSettingsPopUp from "./UserSettingsPopUp";
+import UserSettingsForm from "./UserSettingsForm";
 
 function ChatRoom(props) {
+    const [userSettingsOpen, setUserSettingsOpen] = useState(false);
     const [formValue, setFormValue] = useState('');
     const scrollDownRef = useRef();
+
 
     const messagesRef = db.collection('messages');
     const query = messagesRef.orderBy('createdAt').limit(50);
@@ -19,12 +21,14 @@ function ChatRoom(props) {
     const [user] = useAuthState(auth);
 
     useEffect(()=>{
+
         document.getElementById('scrollDown').scrollIntoView({
             behavior: "smooth",
             block: "end",
             inline: "nearest"
         });
-    });
+
+    }, []);
 
 // writes new document to firestore
     async function sendMessage(e) {
@@ -37,7 +41,6 @@ function ChatRoom(props) {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,
             photoURL
-
         });
         setFormValue('');
         scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
@@ -48,6 +51,7 @@ function ChatRoom(props) {
             <header className="chat__header">
                 <h2>Hello { user.displayName }!</h2>
                 <button onClick={ ()=>auth.signOut() }>Sign out</button>
+                <button onClick={ () => setUserSettingsOpen(true) }>Settings</button>
             </header>
 
             <OnlineUsers/>
@@ -65,12 +69,12 @@ function ChatRoom(props) {
                            onChange={ (e)=>setFormValue(e.target.value) }/>
                     <button type="submit"><i className="far fa-paper-plane add-msg__icon"/></button>
                 </form>
-
             </section>
-
-            <UserSettingsPopUp/>
+            { userSettingsOpen ? <UserSettingsForm update={true} userSettingsOpen={setUserSettingsOpen}/> : <></> }
         </>
     )
+
+
 }
 
 function ChatMessage(props) {
