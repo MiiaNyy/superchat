@@ -1,4 +1,3 @@
-import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,23 +10,25 @@ import UserSettingsForm from "./UserSettingsForm";
 function ChatRoom(props) {
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
     const [formValue, setFormValue] = useState('');
+
     const scrollDownRef = useRef();
 
     const messagesRef = db.collection('messages');
     const query = messagesRef.orderBy('createdAt').limit(50);
 
     const [messages] = useCollectionData(query, {idField: 'id'});
-    const [user] = useAuthState(auth);
 
+    const {uid} = auth.currentUser;
+/*
     useEffect(()=>{
-
-        document.getElementById('scrollDown').scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-            inline: "nearest"
-        });
-
-    }, []);
+        if ( loadingComplete ) {
+            document.getElementById('scrollDown').scrollIntoView({
+                behavior: "smooth",
+                block: "end",
+                inline: "nearest"
+            });
+        }
+    }, [])*/
 
 // writes new document to firestore
     async function sendMessage(e) {
@@ -48,16 +49,17 @@ function ChatRoom(props) {
     return (
         <>
             <header className="chat__header">
-                <h2>Hello { user.displayName }!</h2>
+                <h2>Hello!</h2>
                 <button onClick={ ()=>auth.signOut() }>Sign out</button>
-                <button onClick={ () => setUserSettingsOpen(true) }>Settings</button>
+                <button onClick={ ()=>setUserSettingsOpen(true) }>Settings</button>
             </header>
 
             <OnlineUsers/>
 
 
             <section className="chat__messages">
-                { messages && messages.map(msg=><ChatMessage key={ msg.id } message={ msg }/>) }
+                { messages && messages.map(msg=><ChatMessage key={ msg.id }
+                                                             message={ msg }/>) }
                 <div id="scrollDown" ref={ scrollDownRef }/>
             </section>
 
@@ -69,17 +71,27 @@ function ChatRoom(props) {
                     <button type="submit"><i className="far fa-paper-plane add-msg__icon"/></button>
                 </form>
             </section>
-            { userSettingsOpen ? <UserSettingsForm firstLogin={false} userSettingsOpen={setUserSettingsOpen}/> : <></> }
+            { userSettingsOpen ?
+                <UserSettingsForm firstLogin={ false } userSettingsSet={ setUserSettingsOpen }/> : <></> }
         </>
     )
 
 
 }
 
-function ChatMessage(props) {
-    const {text, uid, photoURL, imageUrl} = props.message;
+function ChatMessage({message, userData, }) {
+    const {text, uid, imageUrl} = message;
+
+    const [msgSender, setMsgSender] = useState('');
+    /*
+        if ( uid === auth.currentUser.uid ) {
+            setMsgSender(userData.chatName);
+            setLoadingComplete(true);
+        }*/
+
     // Give different styling depending if msg is sent by current user or received
     const messageClass = uid === auth.currentUser.uid ? 'msgSent' : 'msgReceived';
+
 
     return (
         <div className="message">
@@ -88,7 +100,21 @@ function ChatMessage(props) {
             </div>
         </div>
     )
+
+
 }
 
+/*
+function getMsgSenderName(uid, setMsgSender, setLoadingComplete) {
+    db.collection("users").doc(uid).get()
+        .then((doc)=>{
+            if ( doc.exists ) {
+                setLoadingComplete(true);
+                setMsgSender(doc.data().chatName);
+            }
+        })
+        .catch((error)=>console.log('Error when getting document for user updates', error));
+
+}*/
 
 export default ChatRoom;

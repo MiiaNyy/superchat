@@ -3,41 +3,44 @@ import { auth, db } from "../firebase";
 import firebase from "firebase";
 
 
-function UserSettingsForm({userSettingsOpen, firstLogin}) {
+function UserSettingsForm({userSettingsSet, setUserData}) {
     const {uid, displayName, photoURL} = auth.currentUser;
 
     const [userName, setUserName] = useState('');
     const [userColor, setUserColor] = useState('');
-
     const [userIcon, setUserIcon] = useState('');
 
     const [loadingComplete, setLoadingComplete] = useState(false);
+    const [firstLogin, setFirstLogin] = useState(true);
+
+    const [iconArr, setIconArr] = useState(getUserIcons());
 
     useEffect(()=>{
-        if ( firstLogin ) {
-            // Users first login
-            setLoadingComplete(true);
-            setUserName(()=>getFirstName(displayName))
-        } else {
-            db.collection("users").doc(uid).get()
-                .then((doc)=>{
-                    const userData = doc.data();
-                    setUserName(()=>userData.chatName)
-                    setUserColor(()=>userData.themeColor);
-                    setUserIcon(()=>userData.chatIcon)
-                    setLoadingComplete(true);
-                })
-                .catch((error)=>{
-                    console.log('Error when getting document for user updates', error)
-                })
-        }
+        db.collection("users").doc(uid).get()
+            .then((doc)=>{
+                if ( doc.exists ) {
+                    console.log('not first login')
+                    setFirstLogin(false);
+
+                    const data = doc.data();
+                    setUserData(()=>doc.data())
+                    setUserName(()=>data.chatName)
+                    setUserColor(()=>data.themeColor);
+                    setUserIcon(()=>data.chatIcon)
+                } else {
+                    // Users first login
+                    console.log('first login')
+                    setUserName(()=>getFirstName(displayName))
+                }
+                setLoadingComplete(true);
+            })
+            .catch((error)=>console.log('Error when getting document for user updates', error));
+
     }, [])
 
-    const iconArr = getUserIcons();
 
     function submitSettings(e) {
         e.preventDefault();
-        userSettingsOpen(false);
         if ( firstLogin ) {
             db.collection("users").doc(uid).set({
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -48,7 +51,11 @@ function UserSettingsForm({userSettingsOpen, firstLogin}) {
                 themeColor: userColor !== '' ? userColor : 'pink',
                 uid,
             })
-                .then(()=>console.log("Document successfully added to collection!"))
+                .then((response)=>{
+                    console.log('submitting settings, data received is:', response)
+                    userSettingsSet(true);
+                    console.log("Document successfully added to collection!")
+                })
                 .catch((error)=>console.error("Error when adding user settings document: ", error));
         } else {
             db.collection("users").doc(uid).update({
@@ -84,7 +91,7 @@ function UserSettingsForm({userSettingsOpen, firstLogin}) {
                     </div>
                     <button>Save</button>
                 </form>
-                { firstLogin ? <></> : <button onClick={ ()=>userSettingsOpen(false) }>close window</button> }
+                { firstLogin ? <></> : <button onClick={ ()=>userSettingsSet(false) }>close window</button> }
             </div>
         )
     } else {
