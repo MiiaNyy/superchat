@@ -13,6 +13,26 @@
     color: #a5a5a5;
     text-align: center;
 }
+
+/* HIDE RADIO */
+[type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+    cursor: pointer;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+    transform: scale(1.1);
+    border: 2px solid pink;
+}
+
 /* The container */
 .clr-container {
     display: block;

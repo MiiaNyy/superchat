@@ -1,61 +1,163 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import firebase from "firebase";
 
-function UserSettingsForm({userSettingsOpen, update}) {
+
+function UserSettingsForm({userSettingsOpen, firstLogin}) {
+    const {uid, displayName, photoURL} = auth.currentUser;
 
     const [userName, setUserName] = useState('');
     const [userColor, setUserColor] = useState('');
 
+    const [userIcon, setUserIcon] = useState('');
+
+    const [loadingComplete, setLoadingComplete] = useState(false);
+
+    useEffect(()=>{
+        if ( firstLogin ) {
+            // Users first login
+            setLoadingComplete(true);
+            setUserName(()=>getFirstName(displayName))
+        } else {
+            db.collection("users").doc(uid).get()
+                .then((doc)=>{
+                    const userData = doc.data();
+                    setUserName(()=>userData.chatName)
+                    setUserColor(()=>userData.themeColor);
+                    setUserIcon(()=>userData.chatIcon)
+                    setLoadingComplete(true);
+                })
+                .catch((error)=>{
+                    console.log('Error when getting document for user updates', error)
+                })
+        }
+    }, [])
+
+    const iconArr = getUserIcons();
+
     function submitSettings(e) {
         e.preventDefault();
-        const {uid, displayName} = auth.currentUser;
-
-        db.collection("users").doc(uid).set({
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-            uid,
-            fullName: displayName,
-            chatName: userName,
-            themeColor: userColor
-        })
-            .then(()=>{
-                console.log("Document successfully added to collection!");
-                userSettingsOpen(false);
+        userSettingsOpen(false);
+        if ( firstLogin ) {
+            db.collection("users").doc(uid).set({
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                fullName: displayName,
+                chatName: userName !== '' ? userName : getFirstName(displayName),
+                chatIcon: userIcon,
+                themeColor: userColor !== '' ? userColor : 'pink',
+                uid,
             })
-            .catch((error)=>{
-                console.error("Error when adding document: ", error);
-            });
+                .then(()=>console.log("Document successfully added to collection!"))
+                .catch((error)=>console.error("Error when adding user settings document: ", error));
+        } else {
+            db.collection("users").doc(uid).update({
+                chatName: userName !== '' ? userName : getFirstName(displayName),
+                chatIcon: userIcon,
+                themeColor: userColor !== '' ? userColor : 'pink',
+            })
+                .then(()=>console.log("User settings document successfully updated to collection!"))
+                .catch((error)=>console.error("Error when updating user settings document: ", error));
+        }
     }
 
+    if ( loadingComplete ) {
+        return (
+            <div className="pop-up">
+                <h2>Settings</h2>
+                <form onSubmit={ (e)=>submitSettings(e) }>
+                    <input type="text" value={ userName } onChange={ (e)=>setUserName(e.target.value) }/>
+                    <div>
+                        <ColorRadioBtn clr="yellow" userColor={ userColor } setUserColor={ setUserColor }/>
+                        <ColorRadioBtn clr="blue" userColor={ userColor } setUserColor={ setUserColor }/>
+                        <ColorRadioBtn clr="purple" userColor={ userColor } setUserColor={ setUserColor }/>
+                        <ColorRadioBtn clr="pink" userColor={ userColor } setUserColor={ setUserColor }/>
+                        <ColorRadioBtn clr="green" userColor={ userColor } setUserColor={ setUserColor }/>
+                    </div>
+
+                    <div>
+                        <IconRadioBtn icon={ {name: 'default', img: photoURL} } userIcon={ userIcon }
+                                      setUserIcon={ setUserIcon }/>
+                        { iconArr.map((icon)=>{
+                            return <IconRadioBtn icon={ icon } userIcon={ userIcon } setUserIcon={ setUserIcon }/>
+                        }) }
+                    </div>
+                    <button>Save</button>
+                </form>
+                { firstLogin ? <></> : <button onClick={ ()=>userSettingsOpen(false) }>close window</button> }
+            </div>
+        )
+    } else {
+
+        return (
+            <div className="pop-up">
+                <p>loading...</p>
+            </div>
+        )
+    }
+}
+
+function IconRadioBtn({icon, setUserIcon, userIcon}) {
+
     return (
-        <div className="pop-up">
-            <h2>Settings</h2>
-            <form onSubmit={ (e)=>submitSettings(e) }>
-                <input type="text" placeholder="Current user name" onChange={ (e)=>setUserName(e.target.value) }/>
-                <div>
-                    <ColorRadioBtn clr="yellow" setUserColor={ setUserColor }/>
-                    <ColorRadioBtn clr="blue" setUserColor={ setUserColor }/>
-                    <ColorRadioBtn clr="purple" setUserColor={ setUserColor }/>
-                    <ColorRadioBtn clr="pink" setUserColor={ setUserColor }/>
-                    <ColorRadioBtn clr="green" setUserColor={ setUserColor }/>
-                </div>
-                <button>Save</button>
-            </form>
-            { update ? <button onClick={ ()=>userSettingsOpen(false) }>close window</button> : <></> }
-        </div>
+        <label htmlFor={ icon.name }>
+            <input type="radio" id={ icon.name } checked={ userIcon === icon.name } value={ icon.name }
+                   onChange={ (e)=>setUserIcon(e.target.value) }/>
+            <img width="50" height="50" src={ icon.img } alt={ `${ icon.name } user icon` }/>
+        </label>
     )
 }
 
-function ColorRadioBtn({clr, setUserColor}) {
+function ColorRadioBtn({clr, setUserColor, userColor}) {
+
     return (
         <label htmlFor={ `${ clr }-color` } className="clr-container">{ clr }
-            <input type="radio" name="radio" id={ `${ clr }-color` } value={ clr }
+            <input type="radio" name="radio" id={ `${ clr }-color` } checked={ userColor === clr } value={ clr }
                    onChange={ (e)=>setUserColor(e.target.value) }/>
             <span id={ clr } className="checkmark"/>
         </label>
     )
-
 }
+
+function getDocumentObj(method) {
+    if ( method === 'update' ) {
+        return
+    }
+}
+
+function getFirstName(fullName) {
+    const nameArr = fullName.split(' ');
+    return nameArr[0];
+}
+
+function getUserIcons() {
+    return [
+        {
+            name: 'blonde-hair',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945423.png"
+        },
+        {
+            name: 'black-hair',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945462.png"
+        },
+        {
+            name: 'dino-head',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945324.png"
+        },
+        {
+            name: 'summer_hat',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945430.png"
+        },
+        {
+            name: 'glasses-and-mustache',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945483.png"
+        },
+        {
+            name: 'green-and-black-hair',
+            img: "https://image.flaticon.com/icons/png/512/2945/2945341.png"
+        }
+    ];
+}
+
 
 export default UserSettingsForm;

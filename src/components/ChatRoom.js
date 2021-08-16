@@ -13,7 +13,6 @@ function ChatRoom(props) {
     const [formValue, setFormValue] = useState('');
     const scrollDownRef = useRef();
 
-
     const messagesRef = db.collection('messages');
     const query = messagesRef.orderBy('createdAt').limit(50);
 
@@ -70,7 +69,7 @@ function ChatRoom(props) {
                     <button type="submit"><i className="far fa-paper-plane add-msg__icon"/></button>
                 </form>
             </section>
-            { userSettingsOpen ? <UserSettingsForm update={true} userSettingsOpen={setUserSettingsOpen}/> : <></> }
+            { userSettingsOpen ? <UserSettingsForm firstLogin={false} userSettingsOpen={setUserSettingsOpen}/> : <></> }
         </>
     )
 

@@ -26,7 +26,7 @@ function UserSettingsPopUp({setUserSettingsOpen}) {
 
 
     if ( userHasNotSetSettings ) {
-        return <UserSettingsForm update={ false } userSettingsOpen={ setUserSettingsOpen }/>
+        return <UserSettingsForm firstLogin={ true } userSettingsOpen={ setUserSettingsOpen }/>
     } else {
         return (
             <div className="pop-up">
