@@ -3,7 +3,7 @@ import { auth, db } from "../firebase";
 import firebase from "firebase";
 
 
-function UserSettingsForm({userSettingsSet, setUserData}) {
+function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen}) {
     const {uid, displayName, photoURL} = auth.currentUser;
 
     const [userName, setUserName] = useState('');
@@ -11,61 +11,68 @@ function UserSettingsForm({userSettingsSet, setUserData}) {
     const [userIcon, setUserIcon] = useState('');
 
     const [loadingComplete, setLoadingComplete] = useState(false);
-    const [firstLogin, setFirstLogin] = useState(true);
 
     const [iconArr, setIconArr] = useState(getUserIcons());
 
     useEffect(()=>{
-        db.collection("users").doc(uid).get()
-            .then((doc)=>{
-                if ( doc.exists ) {
-                    console.log('not first login')
-                    setFirstLogin(false);
-
-                    const data = doc.data();
-                    setUserData(()=>doc.data())
-                    setUserName(()=>data.chatName)
-                    setUserColor(()=>data.themeColor);
-                    setUserIcon(()=>data.chatIcon)
-                } else {
-                    // Users first login
-                    console.log('first login')
-                    setUserName(()=>getFirstName(displayName))
-                }
-                setLoadingComplete(true);
-            })
-            .catch((error)=>console.log('Error when getting document for user updates', error));
+        // Run this when page first renders
+        if ( updatingSettings ) {
+            console.log('updating settings');
+        } else {
+            console.log('first login')
+            setUserName(()=>getFirstName(displayName))
+        }
+        setLoadingComplete(true);
 
     }, [])
 
 
     function submitSettings(e) {
         e.preventDefault();
-        if ( firstLogin ) {
-            db.collection("users").doc(uid).set({
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-                fullName: displayName,
-                chatName: userName !== '' ? userName : getFirstName(displayName),
-                chatIcon: userIcon,
-                themeColor: userColor !== '' ? userColor : 'pink',
-                uid,
-            })
-                .then((response)=>{
-                    console.log('submitting settings, data received is:', response)
-                    userSettingsSet(true);
-                    console.log("Document successfully added to collection!")
-                })
-                .catch((error)=>console.error("Error when adding user settings document: ", error));
-        } else {
+        if ( updatingSettings ) {
             db.collection("users").doc(uid).update({
                 chatName: userName !== '' ? userName : getFirstName(displayName),
                 chatIcon: userIcon,
                 themeColor: userColor !== '' ? userColor : 'pink',
             })
-                .then(()=>console.log("User settings document successfully updated to collection!"))
+                .then(()=>{
+                    userSettingsOpen( () =>false);
+                    setUserData((prev) => {
+                        return {
+                            createdAt: prev.createdAt,
+                            lastSeen: prev.lastSeen,
+                            fullName: prev.fullName,
+                            chatName: userName !== '' ? userName : getFirstName(displayName),
+                            chatIcon: userIcon,
+                            themeColor: userColor !== '' ? userColor : 'pink',
+                        }
+                    })
+                    console.log("User settings document successfully updated to collection!")
+                })
                 .catch((error)=>console.error("Error when updating user settings document: ", error));
+        } else {
+            firstTimeSubmittingSettings();
         }
+    }
+
+    function firstTimeSubmittingSettings() {
+        const userDocument = {
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+            fullName: displayName,
+            chatName: userName !== '' ? userName : getFirstName(displayName),
+            chatIcon: userIcon,
+            themeColor: userColor !== '' ? userColor : 'pink',
+            uid,
+        };
+        // First set changed to firebase
+        db.collection("users").doc(uid).set(userDocument)
+            .then(()=>{
+                setUserData(()=>userDocument); // set user data to user document, so it can be accessed later
+                userSettingsSet(true);
+                console.log("Document successfully added to collection!")
+            })
+            .catch((error)=>console.error("Error when adding user settings document: ", error));
     }
 
     if ( loadingComplete ) {
@@ -91,11 +98,10 @@ function UserSettingsForm({userSettingsSet, setUserData}) {
                     </div>
                     <button>Save</button>
                 </form>
-                { firstLogin ? <></> : <button onClick={ ()=>userSettingsSet(false) }>close window</button> }
+                { updatingSettings ? <button onClick={ ()=>userSettingsSet(false) }>close window</button> : <></> }
             </div>
         )
     } else {
-
         return (
             <div className="pop-up">
                 <p>loading...</p>
@@ -126,11 +132,6 @@ function ColorRadioBtn({clr, setUserColor, userColor}) {
     )
 }
 
-function getDocumentObj(method) {
-    if ( method === 'update' ) {
-        return
-    }
-}
 
 function getFirstName(fullName) {
     const nameArr = fullName.split(' ');

@@ -7,7 +7,9 @@ import SendImageMsg from "./SendImageMsg";
 import OnlineUsers from "./OnlineUsers";
 import UserSettingsForm from "./UserSettingsForm";
 
-function ChatRoom(props) {
+function ChatRoom({userData}) {
+    const [currentUser, setCurrentUser] = useState(userData);
+
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
     const [formValue, setFormValue] = useState('');
 
@@ -49,7 +51,7 @@ function ChatRoom(props) {
     return (
         <>
             <header className="chat__header">
-                <h2>Hello!</h2>
+                <h2>Hello {currentUser.chatName}!</h2>
                 <button onClick={ ()=>auth.signOut() }>Sign out</button>
                 <button onClick={ ()=>setUserSettingsOpen(true) }>Settings</button>
             </header>
@@ -72,7 +74,8 @@ function ChatRoom(props) {
                 </form>
             </section>
             { userSettingsOpen ?
-                <UserSettingsForm firstLogin={ false } userSettingsSet={ setUserSettingsOpen }/> : <></> }
+                <UserSettingsForm updatingSettings={ true } setUserData={ setCurrentUser }
+                                  userSettingsOpen={ setUserSettingsOpen }/> : <></> }
         </>
     )
 
