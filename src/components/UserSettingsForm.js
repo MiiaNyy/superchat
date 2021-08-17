@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import firebase from "firebase";
 
-
-function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen}) {
+function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen, userData}) {
     const {uid, displayName, photoURL} = auth.currentUser;
 
     const [userName, setUserName] = useState('');
@@ -17,6 +16,9 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
     useEffect(()=>{
         // Run this when page first renders
         if ( updatingSettings ) {
+            setUserName(()=>userData.chatName)
+            setUserColor(()=>userData.themeColor);
+            setUserIcon(()=>userData.chatIcon)
             console.log('updating settings');
         } else {
             console.log('first login')
@@ -36,6 +38,7 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                 themeColor: userColor !== '' ? userColor : 'pink',
             })
                 .then(()=>{
+
                     userSettingsOpen( () =>false);
                     setUserData((prev) => {
                         return {
@@ -47,6 +50,7 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                             themeColor: userColor !== '' ? userColor : 'pink',
                         }
                     })
+
                     console.log("User settings document successfully updated to collection!")
                 })
                 .catch((error)=>console.error("Error when updating user settings document: ", error));

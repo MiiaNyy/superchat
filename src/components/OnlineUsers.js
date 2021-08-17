@@ -1,70 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from "../firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import firebase from "firebase";
 
 import User from "./User";
 
 function OnlineUsers() {
-    const usersRef = db.collection('users');
-    const query = usersRef.orderBy('createdAt').limit(50);
-    const [users] = useCollectionData(query, {idField: 'id'});
-    const {uid, displayName} = auth.currentUser;
+    const [users, setUsers] = useState([]);
+    const {uid} = auth.currentUser;
 
-    const [docIsUpdatedOnce, setDocIsUpdatedOnce] = useState(false);
+    const [timer, setTimer] = useState(0);
 
-    // When page first renders
     useEffect(()=>{
-        if ( !docIsUpdatedOnce ) {
-            console.log('mounted');
-            const updateOrAddDoc = updateOrAddUser()
-            return ()=>console.log('unmounting...');
-        }
+        db.collection('users').orderBy('createdAt').limit(100)
+            .onSnapshot((snapshot)=>{
+                setUsers(snapshot.docs.map(doc=>doc.data()))
+            })
     }, []);
 
-    // updates current users lastSeen value, every 10s
     useEffect(()=>{
-        if ( docIsUpdatedOnce ) {
-            const interval = setInterval(()=>{
-                usersRef.get().then((querySnapshot)=>{
-                    querySnapshot.forEach((doc)=>{
-                        if ( doc.data().uid === uid && doc.data().name === displayName ) {
-                            updateUserDocument(doc);
-                        }
-                    });
-                });
-            }, 10000);
-            return ()=>clearInterval(interval)
-        }
-    }, [docIsUpdatedOnce]);
+        const interval = setInterval(()=>{
+            setTimer(prev=>prev + 1)
+        }, 10000);
+        return ()=>clearInterval(interval);
+    }, []);
 
-    async function updateOrAddUser() {
+    useEffect(()=>{
+        console.log('mounted');
 
-        usersRef.get().then((querySnapshot)=>{
-            querySnapshot.forEach((doc)=>{
-                if ( doc.data().uid === uid && doc.data().name === displayName ) {
-                    updateUserDocument(doc);
+        db.collection('users').doc(uid).get()
+            .then((doc)=>{
+                if ( doc.exists ) {
+                    console.log('not a new user');
+                } else {
+                    addNewUserDocument();
+                    console.log("No such document! Creating one");
                 }
-            });
-            setDocIsUpdatedOnce(()=>true);
-        });
-
-        usersRef.doc(uid).get().then((doc)=>{
-            if ( !doc.exists ) {
-                addNewUserDocument();
-                console.log("No such document! Creating one");
-            }
-        }).catch((error)=>{
+            }).catch((error)=>{
             console.log("Error getting document:", error);
         });
-    }
+        return ()=>console.log('unmounting...');
+
+    }, []);
+
+    useEffect(()=>{
+        db.collection("users").doc(uid).update({
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+            .then(()=>console.log("Document successfully updated!"))
+            .catch((error)=>console.error("Error updating document: ", error)); // The document probably doesn't exist.
+    },[timer])
 
     return (
         <section className="chat__users">
             <h2>People that are online</h2>
-            <p>Current user name</p>
-            { users && users.map((user)=>{
-                return user.name !== displayName ? <User key={ user.id } user={ user }/> : <></>;
+            { users.map((user)=>{
+                return user.uid === uid ? <p>You</p> : <User key={ user.id } user={ user }/>;
             }) }
         </section>
     );
@@ -87,18 +77,6 @@ function addNewUserDocument() {
         });
 }
 
-function updateUserDocument(doc) {
-    db.collection("users").doc(doc.id).update({
-        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-    })
-        .then(()=>{
-            console.log("Document successfully updated!");
-        })
-        .catch((error)=>{
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-        });
-}
 
 
 export default OnlineUsers;

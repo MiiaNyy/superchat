@@ -1,20 +1,24 @@
 import React from 'react';
 
 
-
-function User(props) {
-    const user = props.user;
+function User({user}) {
 
     const currentTimestamp = new Date() / 1000;
     const userLastSeen = getUsersLastVisit(user);
 
     if ( userLastSeen >= (currentTimestamp - (60 * 5)) ) {
         return (
-            <p>{ user.name }</p>
+            <div>
+                <p>{ user.chatName }</p>
+            </div>
         )
     } else {
         return <></>
     }
+
+
+
+
 }
 
 function getUsersLastVisit(user) {
