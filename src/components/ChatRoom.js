@@ -8,6 +8,8 @@ import UserSettingsForm from "./UserSettingsForm";
 
 import uniqid from "uniqid";
 
+import getUserIconImg from "../helpers/getUserIconImg";
+
 function ChatRoom({userData}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
@@ -38,6 +40,7 @@ function ChatRoom({userData}) {
         // create new document with these values
         await db.collection('messages').add({
             senderName: currentUser.chatName,
+            senderIcon: userData.chatIcon,
             text: formValue,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,

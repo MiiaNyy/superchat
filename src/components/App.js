@@ -8,18 +8,14 @@ import SignInSection from "./SignIn";
 import UserSettingsForm from "./UserSettingsForm";
 
 function App() {
-    const [user, loading] = useAuthState(auth); // true if firebase.User is logged in, false if not
-
     const [userData, setUserData] = useState();
-
     const [userSettingsSet, setUserSettingsSet] = useState(false);
     const [loadingComplete, setLoadingComplete] = useState(false);
-
     const [firstLogin, setFirstLogin] = useState(false);
 
+    const [user, loading] = useAuthState(auth); // true if firebase.User is logged in, false if not
 
     function ChatRoomOrSettings() {
-
         // default state. This should run first and only once
         if ( !firstLogin && !loadingComplete && !userSettingsSet ) {
             console.log('Getting user data...')
@@ -29,7 +25,6 @@ function App() {
             return <UserSettingsForm updatingSettings={ false } setUserData={ setUserData }
                                      userSettingsSet={ setUserSettingsSet }/>
         } else if ( loadingComplete && userSettingsSet ) {
-            console.log('chatroom')
             return <ChatRoom userData={ userData }/>
         } else {
             return <p>loading</p>
@@ -42,11 +37,9 @@ function App() {
         db.collection("users").doc(uid).get()
             .then((doc)=>{
                 if ( doc.exists ) {
-                    // Not first login
                     setUserData(()=>doc.data());
                     setUserSettingsSet(true);
-                } else {
-                    // Users first login
+                } else { // Users first login
                     setFirstLogin(true);
                 }
                 setLoadingComplete(true);

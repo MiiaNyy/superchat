@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import firebase from "firebase";
 
+import getUserIcons from "../helpers/getIconImages";
+
 function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen, userData}) {
     const {uid, displayName, photoURL} = auth.currentUser;
 
@@ -11,7 +13,7 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
 
     const [loadingComplete, setLoadingComplete] = useState(false);
 
-    const [iconArr, setIconArr] = useState(getUserIcons());
+    const iconArr = getUserIcons();
 
     useEffect(()=>{
         // Run this when page first renders
@@ -25,7 +27,6 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
             setUserName(()=>getFirstName(displayName))
         }
         setLoadingComplete(true);
-
     }, [])
 
 
@@ -38,9 +39,8 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                 themeColor: userColor !== '' ? userColor : 'pink',
             })
                 .then(()=>{
-
-                    userSettingsOpen( () =>false);
-                    setUserData((prev) => {
+                    userSettingsOpen(()=>false);
+                    setUserData((prev)=>{
                         return {
                             createdAt: prev.createdAt,
                             lastSeen: prev.lastSeen,
@@ -50,7 +50,6 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                             themeColor: userColor !== '' ? userColor : 'pink',
                         }
                     })
-
                     console.log("User settings document successfully updated to collection!")
                 })
                 .catch((error)=>console.error("Error when updating user settings document: ", error));
@@ -100,7 +99,7 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                             return <IconRadioBtn icon={ icon } userIcon={ userIcon } setUserIcon={ setUserIcon }/>
                         }) }
                     </div>
-                    <button>Save</button>
+                    <button type={ "submit" }>Save</button>
                 </form>
                 { updatingSettings ? <button onClick={ ()=>userSettingsSet(false) }>close window</button> : <></> }
             </div>
@@ -140,35 +139,6 @@ function ColorRadioBtn({clr, setUserColor, userColor}) {
 function getFirstName(fullName) {
     const nameArr = fullName.split(' ');
     return nameArr[0];
-}
-
-function getUserIcons() {
-    return [
-        {
-            name: 'blonde-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945423.png"
-        },
-        {
-            name: 'black-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945462.png"
-        },
-        {
-            name: 'dino-head',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945324.png"
-        },
-        {
-            name: 'summer_hat',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945430.png"
-        },
-        {
-            name: 'glasses-and-mustache',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945483.png"
-        },
-        {
-            name: 'green-and-black-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945341.png"
-        }
-    ];
 }
 
 

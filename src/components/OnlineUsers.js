@@ -29,9 +29,7 @@ function OnlineUsers() {
 
         db.collection('users').doc(uid).get()
             .then((doc)=>{
-                if ( doc.exists ) {
-                    console.log('not a new user');
-                } else {
+                if ( !doc.exists ) {
                     addNewUserDocument();
                     console.log("No such document! Creating one");
                 }
@@ -42,6 +40,7 @@ function OnlineUsers() {
 
     }, []);
 
+    // Update user document every 10s, so other users can see if you are online or not
     useEffect(()=>{
         db.collection("users").doc(uid).update({
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
@@ -76,7 +75,5 @@ function addNewUserDocument() {
             console.error("Error when adding document: ", error);
         });
 }
-
-
 
 export default OnlineUsers;
