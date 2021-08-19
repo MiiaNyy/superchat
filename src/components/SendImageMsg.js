@@ -9,8 +9,9 @@ const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 function SendImageMsg(props) {
     return (
         <form id="image-form" className="img-form" action="#">
-            <label htmlFor="mediaCapture" className="add-image__label"><i
-                className="far fa-file-image add-image__icon"/></label>
+            <label htmlFor="mediaCapture" className="add-image__label">
+                <i className="fas fa-camera add-image__icon"/>
+            </label>
             <input onChange={ (e)=>onMediaFileSelected(e) } id="mediaCapture" type="file" accept="image/*"
                    capture="camera" className="custom-file-input"/>
         </form>

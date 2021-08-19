@@ -9,6 +9,7 @@ import UserSettingsForm from "./UserSettingsForm";
 import uniqid from "uniqid";
 
 import getUserIconImg from "../helpers/getUserIconImg";
+import { Message } from "./styledComponents/Styles";
 
 function ChatRoom({userData}) {
     const [currentUser, setCurrentUser] = useState(userData);
@@ -44,7 +45,8 @@ function ChatRoom({userData}) {
             text: formValue,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,
-            photoURL
+            photoURL,
+            color: currentUser.themeColor
         });
         setFormValue('');
         scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
@@ -54,11 +56,17 @@ function ChatRoom({userData}) {
         <>
             <header className="chat__header">
                 <h2>Hello { currentUser.chatName }!</h2>
-                <button onClick={ ()=>auth.signOut() }>Sign out</button>
-                <button onClick={ ()=>setUserSettingsOpen(true) }>Settings</button>
+                <p> Welcome to Super chat!</p>
             </header>
 
-            <OnlineUsers/>
+            <section className="chat__users">
+                <OnlineUsers/>
+                <button className="btn btn__settings" onClick={ ()=>setUserSettingsOpen(true) }>Settings <i
+                    className="fas fa-cog"/></button>
+                <button className="btn btn__sign-out" onClick={ ()=>auth.signOut() }>Sign out</button>
+
+            </section>
+
 
             <section className="chat__messages">
                 { messages.map((msg, index)=>{
@@ -69,11 +77,13 @@ function ChatRoom({userData}) {
 
             <section className="form-flex">
                 <SendImageMsg/>
+
                 <form className="msg-form" onSubmit={ (e)=>sendMessage(e) }>
                     <input type="text" placeholder="Send message..." value={ formValue }
                            onChange={ (e)=>setFormValue(e.target.value) }/>
-                    <button type="submit"><i className="far fa-paper-plane add-msg__icon"/></button>
+                    <button type="submit"><i className="fas fa-share add-msg__icon"/></button>
                 </form>
+
             </section>
             { userSettingsOpen ?
                 <UserSettingsForm updatingSettings={ true } userData={ userData } setUserData={ setCurrentUser }
@@ -83,16 +93,20 @@ function ChatRoom({userData}) {
 }
 
 function ChatMessage({message}) {
-    const {text, uid, imageUrl, senderName} = message;
+    const {text, uid, imageUrl, senderName, senderIcon, color} = message;
     // Give different styling depending if msg is sent by current user or received
     const messageClass = uid === auth.currentUser.uid ? 'msgSent' : 'msgReceived';
 
     return (
         <div className="message">
-            <div className={ messageClass }>
-                <span>{ senderName }</span>
+            <Message msgClass={ messageClass } color={ color }>
+                <div className="flex message__sender">
+                    <img width={ 25 } height={ 25 } src={ getUserIconImg(senderIcon) }
+                         alt={ `${ senderIcon } user icon` }/>
+                    <p>{ senderName }</p>
+                </div>
                 { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> : < p> { text }</p> }
-            </div>
+            </Message>
         </div>
     )
 }

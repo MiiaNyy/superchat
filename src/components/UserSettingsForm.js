@@ -84,22 +84,31 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                 <h2>Settings</h2>
                 <form onSubmit={ (e)=>submitSettings(e) }>
                     <input type="text" value={ userName } onChange={ (e)=>setUserName(e.target.value) }/>
-                    <div>
-                        <ColorRadioBtn clr="yellow" userColor={ userColor } setUserColor={ setUserColor }/>
-                        <ColorRadioBtn clr="blue" userColor={ userColor } setUserColor={ setUserColor }/>
-                        <ColorRadioBtn clr="purple" userColor={ userColor } setUserColor={ setUserColor }/>
-                        <ColorRadioBtn clr="pink" userColor={ userColor } setUserColor={ setUserColor }/>
-                        <ColorRadioBtn clr="green" userColor={ userColor } setUserColor={ setUserColor }/>
+
+                    <div className="settings__cont settings__themes">
+                        <p>Theme color</p>
+                        <div className="flex">
+                            <ColorRadioBtn clr="yellow" userColor={ userColor } setUserColor={ setUserColor }/>
+                            <ColorRadioBtn clr="blue" userColor={ userColor } setUserColor={ setUserColor }/>
+                            <ColorRadioBtn clr="purple" userColor={ userColor } setUserColor={ setUserColor }/>
+                            <ColorRadioBtn clr="pink" userColor={ userColor } setUserColor={ setUserColor }/>
+                            <ColorRadioBtn clr="green" userColor={ userColor } setUserColor={ setUserColor }/>
+                        </div>
                     </div>
 
-                    <div>
-                        <IconRadioBtn icon={ {name: 'default', img: photoURL} } userIcon={ userIcon }
-                                      setUserIcon={ setUserIcon }/>
-                        { iconArr.map((icon)=>{
-                            return <IconRadioBtn icon={ icon } userIcon={ userIcon } setUserIcon={ setUserIcon }/>
-                        }) }
+                    <div className="settings__cont settings__icons">
+                        <p>Chat icon</p>
+                        <div className="flex">
+                            <IconRadioBtn icon={ {name: 'default', img: photoURL} } userIcon={ userIcon }
+                                          setUserIcon={ setUserIcon }/>
+                            { iconArr.map((icon)=>{
+                                return <IconRadioBtn icon={ icon } userIcon={ userIcon } setUserIcon={ setUserIcon }/>
+                            }) }
+                        </div>
                     </div>
-                    <button type={ "submit" }>Save</button>
+
+
+                    <button type="submit">Save</button>
                 </form>
                 { updatingSettings ? <button onClick={ ()=>userSettingsSet(false) }>close window</button> : <></> }
             </div>
@@ -127,7 +136,7 @@ function IconRadioBtn({icon, setUserIcon, userIcon}) {
 function ColorRadioBtn({clr, setUserColor, userColor}) {
 
     return (
-        <label htmlFor={ `${ clr }-color` } className="clr-container">{ clr }
+        <label htmlFor={ `${ clr }-color` } className="clr-container">
             <input type="radio" name="radio" id={ `${ clr }-color` } checked={ userColor === clr } value={ clr }
                    onChange={ (e)=>setUserColor(e.target.value) }/>
             <span id={ clr } className="checkmark"/>

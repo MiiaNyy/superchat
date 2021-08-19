@@ -64,42 +64,46 @@
     border-radius: 50%;
 }
 
-
-
 /* Add different colors on buttons */
-
 #yellow {
-    background-color: #ffe600;
-}
-#pink {
-    background-color: #ff00f2;
-}
-#purple {
-    background-color: #9500ff;
-}
-#blue {
-    background-color: #00eaff;
-}
-#green {
-    background-color: #00ff22;
+    background-color: #FFC68A;
 }
 
+#pink {
+    background-color: #ffa2bb;
+}
+
+#purple {
+    background-color: #7e8ce0;
+}
+
+#blue {
+    background-color: #36c7d0;
+}
+
+#green {
+    background-color: #4acfac;
+}
 
 
 /* On mouse-over, add different background color */
-.clr-container:hover input ~ #yellow{
+.clr-container:hover input ~ #yellow {
     background-color: #fce566;
 }
-.clr-container:hover input ~ #purple{
+
+.clr-container:hover input ~ #purple {
     background-color: #ccc;
 }
-.clr-container:hover input ~ #blue{
+
+.clr-container:hover input ~ #blue {
     background-color: #ccc;
 }
-.clr-container:hover input ~ #green{
+
+.clr-container:hover input ~ #green {
     background-color: #ccc;
 }
-.clr-container:hover input ~ #pink{
+
+.clr-container:hover input ~ #pink {
     background-color: #ccc;
 }
 
@@ -129,3 +133,30 @@
     border-radius: 50%;
     background: white;
 }
+
+/* RADIO BUTTON CONTAINERS */
+.settings__cont {
+    width: 100%;
+    margin: 1em auto;
+}
+
+.settings__cont .flex {
+    justify-content: space-between;
+    padding: 0.7em;
+}
+
+.settings__cont p {
+    width: 70%;
+    margin: 0 auto;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.settings__themes {
+    max-width: 300px;
+}
+
+.settings__icons .flex {
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
