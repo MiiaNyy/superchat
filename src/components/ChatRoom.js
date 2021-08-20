@@ -99,14 +99,18 @@ function ChatMessage({message}) {
 
     return (
         <div className="message">
-            <Message msgClass={ messageClass } color={ color }>
-                <div className="flex message__sender">
-                    <img width={ 25 } height={ 25 } src={ getUserIconImg(senderIcon) }
-                         alt={ `${ senderIcon } user icon` }/>
-                    <p>{ senderName }</p>
-                </div>
-                { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> : < p> { text }</p> }
-            </Message>
+            <div className="flex message__sender">
+
+                <p>{ senderName }</p>
+            </div>
+            <div className="flex">
+                <img width={ 25 } height={ 25 } src={ getUserIconImg(senderIcon) }
+                     alt={ `${ senderIcon } user icon` }/>
+                <Message msgClass={ messageClass } color={ color }>
+                    { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> : < p> { text }</p> }
+                </Message>
+            </div>
+
         </div>
     )
 }

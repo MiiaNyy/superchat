@@ -81,11 +81,17 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
     if ( loadingComplete ) {
         return (
             <div className="pop-up">
+                { updatingSettings ? <div className="close_cont"><i className="fas fa-times close-settings"
+                                                                    onClick={ ()=>userSettingsSet(false) }/>
+                </div> : <></> }
                 <h2>Settings</h2>
                 <form onSubmit={ (e)=>submitSettings(e) }>
-                    <input type="text" value={ userName } onChange={ (e)=>setUserName(e.target.value) }/>
-
-                    <div className="settings__cont settings__themes">
+                    <div className="settings__cont">
+                        <p>User name</p>
+                        <input className="settings__name" type="text" value={ userName }
+                               onChange={ (e)=>setUserName(e.target.value) }/>
+                    </div>
+                    <div className="settings__cont">
                         <p>Theme color</p>
                         <div className="flex">
                             <ColorRadioBtn clr="yellow" userColor={ userColor } setUserColor={ setUserColor }/>
@@ -108,9 +114,9 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                     </div>
 
 
-                    <button type="submit">Save</button>
+                    <button className="btn btn__settings" type="submit">Save</button>
                 </form>
-                { updatingSettings ? <button onClick={ ()=>userSettingsSet(false) }>close window</button> : <></> }
+
             </div>
         )
     } else {

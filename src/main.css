@@ -32,14 +32,6 @@ img {
     max-width: 100%;
 }
 
-button {
-    transition: all 0.2s ease-in-out;
-}
-
-button:hover {
-    transform: scale(1.1);
-}
-
 
 /*---TYPOGRAPHY---*/
 
@@ -66,6 +58,11 @@ h1 {
     padding: 0.5em 1em;
     margin-bottom: 1em;
     border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: scale(1.1);
 }
 
 .btn__sign-out:hover {
@@ -73,7 +70,7 @@ h1 {
 }
 
 .btn__settings:hover {
-background-color: #36c7d0;
+    background-color: #7e8ce0;
 }
 
 
@@ -162,39 +159,62 @@ background-color: #36c7d0;
 .msg-form input {
     width: 100%;
     padding: 1em;
-    border-bottom: 2px solid #343434;
-    background-color: #292A34;
+    outline: none;
+    border: 1px solid #343434;
+    border-radius: 20px;
+    background-color: rgb(58, 58, 62);
     color: #e7e7e7;
-}
-
-.msg-form button {
-    padding: 0.3em 0.4em;
-    margin-right: 1rem;
-    border-radius: 50px;
-    font-size: 25px;
-    border: 2px solid rgba(54, 199, 208, 0.94);
-    background-color: #343434;
-}
-
-.add-msg__icon {
-    color: rgba(54, 199, 208, 0.94);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     transition: all 0.2s ease-in-out;
 }
 
-.add-msg__icon:hover {
-    color: #36c7d0;
+.msg-form input:focus {
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+    background-color: rgb(66, 66, 68);
 }
+
+.msg-form button {
+    padding: 0.1em 0.5em;
+    margin-right: 1rem;
+    border-radius: 50px;
+    font-size: 20px;
+    border: 2px solid #6f778b;
+    background-color: #343434;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-msg__icon {
+    color: #6f778b;
+    transition: all 0.2s ease-in-out;
+}
+
+.msg-form button:hover {
+    background-color: #7e8ce0;
+    border: 2px solid #7e8ce0;
+}
+
+.msg-form button:hover > .add-msg__icon {
+    color: #343434;
+}
+
 
 .img-form {
     display: flex;
     align-items: center;
     margin-left: 1rem;
+    padding: 0.5em;
     background-color: #2D2D2D;
+    border-radius: 50px;
+    border: 2px solid #2D2D2D;
     transition: all 0.2s ease-in-out;
 }
 
 .img-form:hover {
-    transform: scale(1.1);
+    border: 2px solid #7e8ce0;
+}
+
+.img-form:hover .add-image__icon {
+    color: #7e8ce0;
 }
 
 .custom-file-input {
@@ -209,13 +229,10 @@ background-color: #36c7d0;
 .add-image__icon {
     font-size: 24px;
     margin-bottom: 0;
-    color: #36c7d0;
+    color: #6f778b;
     transition: all 0.2s ease-in-out;
 }
 
-.add-image__icon:hover {
-    color: #20effa;
-}
 
 
 .message {
@@ -254,6 +271,8 @@ background-color: #36c7d0;
 .msgImg {
     max-height: 300px;
 }
+
+
 
 
 @media (min-width: 700px) {
