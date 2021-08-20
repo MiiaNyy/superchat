@@ -4,8 +4,9 @@ import firebase from "firebase";
 
 import User from "./User";
 import getUserIconImg from "../helpers/getUserIconImg";
+import { UserColor } from "./styledComponents/Styles";
 
-function OnlineUsers() {
+function OnlineUsersList() {
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUSer] = useState();
     const [loadingComplete, setLoadingComplete] = useState(false);
@@ -61,8 +62,9 @@ function OnlineUsers() {
             <div className="users__list">
                 <h2>Chat users </h2>
                 <div className="flex online__user">
+                    <UserColor color={currentUser.themeColor}/>
                     <img width={ 30 } height={ 30 } src={ getUserIconImg(currentUser.chatIcon) } alt=""/>
-                    <p>{ currentUser.chatName }</p>
+                    <p>You</p>
                 </div>
                 { users.map((user)=>{
                     return <User key={ user.id } user={ user }/>;
@@ -94,4 +96,4 @@ function addNewUserDocument(setLoadingComplete) {
         });
 }
 
-export default OnlineUsers;
+export default OnlineUsersList;

@@ -23,9 +23,9 @@ main {
     background-color: #2d2d2d;
     color: #e7e7e7;
     border-radius: 20px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+    transition: all 0.3s ease-in-out;
 }
-
 
 img {
     display: block;
@@ -76,8 +76,10 @@ h1 {
 
 /* USER STYLES IN ONLINE SECTION AND MESSAGES */
 
-.message__users {
-
+.message__sender {
+    font-size: 0.8rem;
+    font-style: italic;
+    border: 2px solid burlywood;
 }
 
 .users__list {
@@ -104,7 +106,6 @@ h1 {
 }
 
 /* CHATROOM */
-
 .chat__header, .chat__users {
     padding: 0.7em;
 }
@@ -117,12 +118,10 @@ h1 {
     border-bottom: 2px solid #262626;
 }
 
-
 .chat__users {
     text-align: center;
     grid-area: 2 / 1 / 6 / 2;
     border-right: 2px solid #262626;
-
 }
 
 .chat__messages {
@@ -197,7 +196,6 @@ h1 {
     color: #343434;
 }
 
-
 .img-form {
     display: flex;
     align-items: center;
@@ -232,8 +230,6 @@ h1 {
     color: #6f778b;
     transition: all 0.2s ease-in-out;
 }
-
-
 
 .message {
     margin-bottom: .5em;
@@ -271,9 +267,6 @@ h1 {
 .msgImg {
     max-height: 300px;
 }
-
-
-
 
 @media (min-width: 700px) {
     main {

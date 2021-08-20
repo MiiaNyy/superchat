@@ -3,18 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 import firebase from "firebase";
 
 import SendImageMsg from "./SendImageMsg";
-import OnlineUsers from "./OnlineUsers";
+import OnlineUsersList from "./OnlineUsersList";
 import UserSettingsForm from "./UserSettingsForm";
 
 import uniqid from "uniqid";
 
 import getUserIconImg from "../helpers/getUserIconImg";
-import { Message } from "./styledComponents/Styles";
+import { Message, MessageContainer, MsgSenderName } from "./styledComponents/Styles";
 
 function ChatRoom({userData}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
     const [formValue, setFormValue] = useState('');
+
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const scrollDownRef = useRef();
 
@@ -52,6 +54,29 @@ function ChatRoom({userData}) {
         scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
     }
 
+    function Sidebar() {
+        if ( sidebarOpen ) {
+            return (
+                <>
+                    <section className="chat__users">
+                        <i onClick={ ()=>toggleSidebar(sidebarOpen, setSidebarOpen) } className="fas fa-bars"/>
+                        <OnlineUsersList/>
+                        <button className="btn btn__settings" onClick={ ()=>setUserSettingsOpen(true) }>Settings <i
+                            className="fas fa-cog"/></button>
+                        <button className="btn btn__sign-out" onClick={ ()=>auth.signOut() }>Sign out</button>
+                    </section>
+                </>
+            )
+        } else {
+            return (
+                <section className="chat__users">
+                    <i onClick={ ()=>toggleSidebar(sidebarOpen, setSidebarOpen) } className="fas fa-bars"/>
+                </section>
+            )
+        }
+
+    }
+
     return (
         <>
             <header className="chat__header">
@@ -59,14 +84,7 @@ function ChatRoom({userData}) {
                 <p> Welcome to Super chat!</p>
             </header>
 
-            <section className="chat__users">
-                <OnlineUsers/>
-                <button className="btn btn__settings" onClick={ ()=>setUserSettingsOpen(true) }>Settings <i
-                    className="fas fa-cog"/></button>
-                <button className="btn btn__sign-out" onClick={ ()=>auth.signOut() }>Sign out</button>
-
-            </section>
-
+            <Sidebar/>
 
             <section className="chat__messages">
                 { messages.map((msg, index)=>{
@@ -77,14 +95,13 @@ function ChatRoom({userData}) {
 
             <section className="form-flex">
                 <SendImageMsg/>
-
                 <form className="msg-form" onSubmit={ (e)=>sendMessage(e) }>
                     <input type="text" placeholder="Send message..." value={ formValue }
                            onChange={ (e)=>setFormValue(e.target.value) }/>
                     <button type="submit"><i className="fas fa-share add-msg__icon"/></button>
                 </form>
-
             </section>
+
             { userSettingsOpen ?
                 <UserSettingsForm updatingSettings={ true } userData={ userData } setUserData={ setCurrentUser }
                                   userSettingsOpen={ setUserSettingsOpen }/> : <></> }
@@ -99,20 +116,28 @@ function ChatMessage({message}) {
 
     return (
         <div className="message">
-            <div className="flex message__sender">
-
-                <p>{ senderName }</p>
-            </div>
-            <div className="flex">
+            <MsgSenderName msgClass={ messageClass }>{ messageClass === 'msgSent' ? 'You' : senderName }</MsgSenderName>
+            <MessageContainer msgClass={ messageClass }>
                 <img width={ 25 } height={ 25 } src={ getUserIconImg(senderIcon) }
                      alt={ `${ senderIcon } user icon` }/>
                 <Message msgClass={ messageClass } color={ color }>
-                    { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> : < p> { text }</p> }
+                    { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> :
+                        < p> { text }</p> }
                 </Message>
-            </div>
-
+            </MessageContainer>
         </div>
     )
 }
+
+function toggleSidebar(sidebarOpen, setSidebar) {
+    if ( sidebarOpen ) {
+        document.querySelector("main").style.gridTemplateColumns = "50px repeat(2, 1fr)";
+        setSidebar(false);
+    } else {
+        document.querySelector("main").style.gridTemplateColumns = "200px repeat(2, 1fr)";
+        setSidebar(true);
+    }
+}
+
 
 export default ChatRoom;
