@@ -6,20 +6,15 @@ import SendImageMsg from "./SendImageMsg";
 import OnlineUsersList from "./OnlineUsersList";
 import UserSettingsForm from "./UserSettingsForm";
 
-import uniqid from "uniqid";
-
 import getUserIconImg from "../helpers/getUserIconImg";
 import { Message, MessageContainer, SenderInfo, SentTime } from "./styledComponents/Styles";
 
+import spinner from "../spinner.svg";
+import uniqid from "uniqid"
 
 function ChatRoom({userData}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
-
-
-
-
-
 
     function Sidebar() {
         const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -41,7 +36,6 @@ function ChatRoom({userData}) {
         )
     }
 
-
     return (
         <>
             <header className="chat__header">
@@ -50,9 +44,7 @@ function ChatRoom({userData}) {
             </header>
 
             <Sidebar/>
-
             <ChatMessages/>
-
             <NewMessageForm currentUser={ currentUser }/>
 
             { userSettingsOpen ?
@@ -65,29 +57,37 @@ function ChatRoom({userData}) {
 function ChatMessages({}) {
     const scrollDownRef = useRef();
     const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [scrollDown, setScrollDown] = useState(false);
 
     useEffect(()=>{
         db.collection('messages').orderBy('createdAt').limit(100)
             .onSnapshot((snapshot)=>{
-                setMessages(snapshot.docs.map(doc=>doc.data()))
+                setMessages(snapshot.docs.map(doc=>doc.data()));
+                setLoading(false);
             })
     }, [])
 
-    useEffect(()=>{
-        scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
-    }, [messages])
 
-    return (
-        <section className="chat__messages">
-            { messages.map((msg, index)=>{
-                return <ChatMessage key={ uniqid() } message={ msg }/>
-            }) }
-            <div id="scrollDown" ref={ scrollDownRef }/>
-        </section>
-    )
+    if ( loading ) {
+        return (
+            <section className="chat__messages">
+                <img width={ 90 } height={ 90 } style={ {margin: "2em auto"} } src={ spinner } alt="loading"/>
+            </section>
+        )
+    } else {
+        return (
+            <section className="chat__messages">
+                { messages.map((msg)=>{
+                    return <ChatMessage key={ uniqid() } message={ msg }/>
+                }) }
+                <div id="scrollDown" ref={ scrollDownRef }/>
+            </section>
+        )
+    }
 }
 
-function NewMessageForm({currentUser, scrollDown}) {
+function NewMessageForm({currentUser}) {
     const [formValue, setFormValue] = useState('');
 
     // writes new document to firestore
@@ -108,8 +108,6 @@ function NewMessageForm({currentUser, scrollDown}) {
             console.log('New message successfully added to database')
         }).catch(error=>console.log('error happened when adding new message:', error))
         setFormValue('');
-
-        //document.getElementById('scrollDown').scrollIntoView({behavior: 'smooth'});
     }
 
     return (
@@ -149,7 +147,6 @@ function ChatMessage({message}) {
     } else {
         return <></>
     }
-
 }
 
 function getMsgCreatedTime(timestamp) {

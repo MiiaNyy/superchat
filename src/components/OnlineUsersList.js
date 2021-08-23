@@ -7,6 +7,7 @@ import { UserColor } from "./styledComponents/Styles";
 import User from "./User";
 
 import getUserIconImg from "../helpers/getUserIconImg";
+import uniqid from "uniqid";
 
 function OnlineUsersList() {
     const [users, setUsers] = useState([]);
@@ -70,7 +71,7 @@ function OnlineUsersList() {
                     <p>You</p>
                 </div>
                 { users.map((user)=>{
-                    return <User key={ user.id } user={ user }/>;
+                    return <User key={ uniqid() } user={ user }/>;
                 }) }
             </div>
         );
