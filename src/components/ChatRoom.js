@@ -55,27 +55,23 @@ function ChatRoom({userData}) {
     }
 
     function Sidebar() {
-        if ( sidebarOpen ) {
-            return (
-                <>
-                    <section className="chat__users">
-                        <i onClick={ ()=>toggleSidebar(sidebarOpen, setSidebarOpen) } className="fas fa-bars"/>
+        return (
+            <>
+                <section className="sidebar">
+                    <i className={ `fas ${ sidebarOpen ? 'fa-times' : 'fa-bars' } sidebar__toggle` }
+                       onClick={ ()=>toggleSidebar(sidebarOpen, setSidebarOpen) }/>
+
+                    <div className={`sidebar__content ${sidebarOpen ? 'visible' : 'hidden'}`}>
                         <OnlineUsersList/>
                         <button className="btn btn__settings" onClick={ ()=>setUserSettingsOpen(true) }>Settings <i
                             className="fas fa-cog"/></button>
                         <button className="btn btn__sign-out" onClick={ ()=>auth.signOut() }>Sign out</button>
-                    </section>
-                </>
-            )
-        } else {
-            return (
-                <section className="chat__users">
-                    <i onClick={ ()=>toggleSidebar(sidebarOpen, setSidebarOpen) } className="fas fa-bars"/>
+                    </div>
                 </section>
-            )
-        }
-
+            </>
+        )
     }
+
 
     return (
         <>

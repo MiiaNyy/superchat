@@ -83,8 +83,9 @@ h1 {
 }
 
 .users__list {
-    max-height: 85%;
-    min-height: 85%;
+    max-height: 80%;
+    min-height: 80%;
+    overflow-y: auto;
 }
 
 .online__user {
@@ -106,7 +107,7 @@ h1 {
 }
 
 /* CHATROOM */
-.chat__header, .chat__users {
+.chat__header, .sidebar {
     padding: 0.7em;
 }
 
@@ -118,17 +119,11 @@ h1 {
     border-bottom: 2px solid #262626;
 }
 
-.chat__users {
-    text-align: center;
-    grid-area: 2 / 1 / 6 / 2;
-    border-right: 2px solid #262626;
-}
-
 .chat__messages {
     max-height: 80vh;
     min-height: 80vh;
     padding: 0.5em 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     grid-area: 2 / 2 / 5 / 4;
     background-color: #262833;
 }
@@ -262,6 +257,37 @@ h1 {
     margin-left: 0.5em;
 }
 
+
+/* SIDEBAR */
+
+.sidebar {
+    text-align: center;
+    grid-area: 2 / 1 / 6 / 2;
+    border-right: 2px solid #262626;
+}
+
+.sidebar__toggle {
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar__toggle:hover {
+    transform: scale(1.2);
+    opacity: 0.7;
+}
+
+.sidebar__content {
+    height: 100%;
+}
+
+.sidebar__content.visible {
+    visibility: visible;
+}
+
+.sidebar__content.hidden {
+    visibility: hidden;
+}
 
 /* ADDING IMAGE TO CHAT */
 .msgImg {

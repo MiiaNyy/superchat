@@ -13,3 +13,4 @@ export default function getUserIconImg(imgName) {
     }
     return iconImg ? iconImg : photoURL;
 }
+

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from "../firebase";
 import firebase from "firebase";
 
-import User from "./User";
-import getUserIconImg from "../helpers/getUserIconImg";
+import spinner from "../spinner.svg";
 import { UserColor } from "./styledComponents/Styles";
+import User from "./User";
+
+import getUserIconImg from "../helpers/getUserIconImg";
 
 function OnlineUsersList() {
     const [users, setUsers] = useState([]);
@@ -57,13 +59,14 @@ function OnlineUsersList() {
             .catch((error)=>console.error("Error updating document: ", error)); // The document probably doesn't exist.
     }, [timer])
 
+
     if ( loadingComplete ) {
         return (
             <div className="users__list">
                 <h2>Chat users </h2>
                 <div className="flex online__user">
-                    <UserColor color={currentUser.themeColor}/>
-                    <img width={ 30 } height={ 30 } src={ getUserIconImg(currentUser.chatIcon) } alt=""/>
+                    <UserColor color={ currentUser.themeColor }/>
+                    <img width={ 30 } height={ 30 } src={ getUserIconImg(currentUser.chatIcon) } alt="users icon"/>
                     <p>You</p>
                 </div>
                 { users.map((user)=>{
@@ -72,7 +75,13 @@ function OnlineUsersList() {
             </div>
         );
     } else {
-        return <p>...</p>
+        return (
+            <div className="users__list">
+                <h2>Chat users </h2>
+                <img width={ 50 } height={ 50 } style={ {margin: '2em auto'} } src={ spinner } alt="loading spinner"/>
+            </div>
+
+        )
     }
 
 
