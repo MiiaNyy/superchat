@@ -17,6 +17,8 @@ function App() {
 
     const [user, loading] = useAuthState(auth); // true if firebase.User is logged in, false if not
 
+    const gridOn = loadingComplete && userSettingsSet ? 'grid' : '';
+
     function ChatRoomOrSettings() {
         if ( !firstLogin && !loadingComplete && !userSettingsSet ) { // default state. This should run first and only once
             getUserData();
@@ -48,11 +50,10 @@ function App() {
     }
 
     return (
-        <main>
+        <main className={gridOn}>
             { loading ? <LoadingSpinner/> : user ? <ChatRoomOrSettings/> : <SignInSection/> }
         </main>
     )
-
 }
 
 function LoadingSpinner() {
