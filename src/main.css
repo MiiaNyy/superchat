@@ -32,6 +32,10 @@ img {
     max-width: 100%;
 }
 
+#scrollDown {
+    padding: 0.1em;
+    border: 2px solid deepskyblue;
+}
 
 /*---TYPOGRAPHY---*/
 
@@ -42,6 +46,13 @@ h1, h2, h3, h4, h5, h6, p {
 
 h1 {
     text-align: center;
+}
+
+span {
+    font-size: 0.6rem;
+    margin: 0;
+    font-style: italic;
+    letter-spacing: 1px;
 }
 
 

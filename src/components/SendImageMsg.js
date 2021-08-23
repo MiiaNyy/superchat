@@ -2,26 +2,24 @@ import React from 'react';
 import { auth, db } from "../firebase";
 import firebase from "firebase";
 
-// A loading image URL.
-const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
+import spinner from "../spinner.svg";
 
 
-function SendImageMsg(props) {
+function SendImageMsg({currentUser}) {
     return (
         <form id="image-form" className="img-form" action="#">
             <label htmlFor="mediaCapture" className="add-image__label">
                 <i className="fas fa-camera add-image__icon"/>
             </label>
-            <input onChange={ (e)=>onMediaFileSelected(e) } id="mediaCapture" type="file" accept="image/*"
+            <input onChange={ (e)=>onMediaFileSelected(e, currentUser) } id="mediaCapture" type="file" accept="image/*"
                    capture="camera" className="custom-file-input"/>
         </form>
     );
 }
 
-function onMediaFileSelected(e) {
+function onMediaFileSelected(e, currentUser) {
     e.preventDefault();
     const file = e.target.files[0];
-    console.log('file is', file);
     // Clear the selection in the file picker input.
     document.getElementById('image-form').reset();
 
@@ -33,20 +31,25 @@ function onMediaFileSelected(e) {
         };
         return;
     }
-    saveImageMessage(file);
+    saveImageMessage(file, currentUser);
 }
 
 // Saves a new message containing an image in Firebase.
 // This first saves the image in Firebase storage.
-function saveImageMessage(file) {
+function saveImageMessage(file, currentUser) {
     const {uid, photoURL} = auth.currentUser;
     const messagesRef = db.collection('messages');
+
     // 1 - We add a message with a loading icon that will get updated with the shared image.
     messagesRef.add({
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
         photoURL,
-        imageUrl: LOADING_IMAGE_URL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        color: currentUser.themeColor,
+        senderName: currentUser.chatName,
+        senderIcon: currentUser.chatIcon,
+        imageUrl: spinner,
+
     }).then((messageRef)=>{
         // 2 - Upload the image to Cloud Storage.
         const filePath = firebase.auth().currentUser.uid + '/' + messageRef.id + '/' + file.name;
@@ -60,9 +63,7 @@ function saveImageMessage(file) {
                 });
             });
         });
-    }).catch(function (error) {
-        console.error('There was an error uploading a file to Cloud Storage:', error);
-    });
+    }).catch((error)=>console.error('There was an error uploading a file to Cloud Storage:', error));
 }
 
 

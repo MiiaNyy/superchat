@@ -1,30 +1,42 @@
+import blond from "../blond.png"
+import green_and_black_hair from "../green-and-black.png"
+import glasses_and_mustache from "../mustache.png"
+import summer_hat from "../summer-hat.png"
+import dino_head from "../dino-head.png"
+import black_hair from "../black-hair.png"
 
 
 export default function getUserIcons() {
     return [
         {
             name: 'blonde-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945423.png"
+            img: blond,
+            // https://image.flaticon.com/icons/png/512/2945/2945423.png
         },
         {
             name: 'black-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945462.png"
+            img: black_hair,
+            //img: "https://image.flaticon.com/icons/png/512/2945/2945462.png"
         },
         {
             name: 'dino-head',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945324.png"
+            img: dino_head,
+            //img: "https://image.flaticon.com/icons/png/512/2945/2945324.png"
         },
         {
             name: 'summer_hat',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945430.png"
+            img: summer_hat,
+            //img: "https://image.flaticon.com/icons/png/512/2945/2945430.png"
         },
         {
             name: 'glasses-and-mustache',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945483.png"
+            img: glasses_and_mustache,
+            //img: "https://image.flaticon.com/icons/png/512/2945/2945483.png"
         },
         {
             name: 'green-and-black-hair',
-            img: "https://image.flaticon.com/icons/png/512/2945/2945341.png"
+            img: green_and_black_hair,
+            //img: "https://image.flaticon.com/icons/png/512/2945/2945341.png"
         }
     ];
 }

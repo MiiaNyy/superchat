@@ -36,14 +36,22 @@ const MessageContainer = styled.div`
   flex-direction: ${ props=>props.msgClass === "msgSent" ? "row-reverse" : "row" };
 `;
 
-const MsgSenderName = styled.p`
+const SenderInfo = styled.p`
   font-size: 0.7rem;
   font-style: italic;
   margin-left: ${ props=>props.msgClass === "msgSent" ? "auto" : "3em" };
   margin-right: ${ props=>props.msgClass === "msgSent" ? "3em" : "initial" };
-  text-align:  ${ props=>props.msgClass === "msgSent" ? "right" : "left" };;
-  
+  text-align: ${ props=>props.msgClass === "msgSent" ? "right" : "left" };
 `;
+
+const SentTime = styled(SenderInfo)`
+  font-size: 0.6rem;
+  color: black;
+  letter-spacing: 1px;
+  margin-left: ${ props=>props.msgClass === "msgSent" ? "auto" : "0" };
+  margin-right: ${ props=>props.msgClass === "msgSent" ? "0" : "initial" };
+`;
+
 
 const UserColor = styled.div`
   padding: 0.5em;
@@ -53,6 +61,7 @@ const UserColor = styled.div`
 export {
     Message,
     MessageContainer,
-    MsgSenderName,
+    SenderInfo,
     UserColor,
+    SentTime,
 }
