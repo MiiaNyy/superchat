@@ -19,10 +19,29 @@ img {
 }
 
 #scrollDown {
-    padding: 0.1em;
-    border: 2px solid deepskyblue;
+    padding: 0.5em;
+}
+/* ---SCROLLBAR--- */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
+/* Track */
+::-webkit-scrollbar-track {
+    background: #343434;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(113, 113, 113, 0.89);
+}
 /*---TYPOGRAPHY---*/
 
 h1, h2, h3, h4, h5, h6, p {
@@ -159,7 +178,7 @@ span {
 .chat__messages {
     max-height: 80vh;
     min-height: 80vh;
-    padding: 0.5em 0;
+    padding: 0.5em 0 0;
     overflow-y: auto;
     grid-area: 2 / 2 / 5 / 4;
     background-color: #262833;

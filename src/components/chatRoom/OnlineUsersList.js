@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import firebase from "firebase";
 
-import spinner from "../spinner.svg";
-import { UserColor } from "./styledComponents/Styles";
+import spinner from "../../assets/spinner.svg";
+import { UserColor } from "../styledComponents/GeneralStyles";
 import User from "./User";
 
-import getUserIconImg from "../helpers/getUserIconImg";
+import getUserIconImg from "../../helpers/getUserIconImg";
 import uniqid from "uniqid";
 
 function OnlineUsersList() {
     const [users, setUsers] = useState([]);
     const [currentUser, setCurrentUSer] = useState();
     const [loadingComplete, setLoadingComplete] = useState(false);
+    const [timer, setTimer] = useState(0);
 
     const {uid} = auth.currentUser;
-
-    const [timer, setTimer] = useState(0);
 
     useEffect(()=>{
         db.collection('users').orderBy('createdAt').limit(100)
             .onSnapshot((snapshot)=>{
-                setUsers(snapshot.docs.map(doc=>doc.data()))
+                setUsers(snapshot.docs.map(doc=>doc.data()));
             })
+
     }, []);
 
     useEffect(()=>{
         const interval = setInterval(()=>{
             setTimer(prev=>prev + 1)
-        }, 10000);
+        }, 20000);
         return ()=>clearInterval(interval);
     }, []);
 
@@ -48,10 +48,9 @@ function OnlineUsersList() {
             console.log("Error getting document:", error);
         });
         return ()=>console.log('unmounting...');
-
     }, []);
 
-    // Update user document every 10s, so other users can see if you are online or not
+    // Update user document every 20s, so other users can see if you are online or not
     useEffect(()=>{
         db.collection("users").doc(uid).update({
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
@@ -71,7 +70,7 @@ function OnlineUsersList() {
                     <p>You</p>
                 </div>
                 { users.map((user)=>{
-                    return <User key={ uniqid() } user={ user }/>;
+                    return user.uid !== uid ? <User key={ uniqid() } user={ user }/> : <></>;
                 }) }
             </div>
         );
@@ -84,8 +83,6 @@ function OnlineUsersList() {
 
         )
     }
-
-
 }
 
 function addNewUserDocument(setLoadingComplete) {

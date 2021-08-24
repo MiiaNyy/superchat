@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from '../firebase'
 
-import ChatRoom from "./ChatRoom";
+import ChatRoom from "./chatRoom/ChatRoom";
 import UserSettingsForm from "./UserSettingsForm";
 
-import spinner from "../spinner.svg";
+import spinner from "../assets/spinner.svg";
 import SignIn from "./SignIn";
-import { Main } from "./styledComponents/Styles";
+import { Main } from "./styledComponents/GeneralStyles";
 import firebase from "firebase";
 
 function App() {

@@ -3,7 +3,7 @@ import React from "react";
 import firebase from "firebase";
 import { auth } from "../firebase";
 
-import { SignInSection } from "./styledComponents/Styles";
+import { SignInSection } from "./styledComponents/GeneralStyles";
 
 function SignIn() {
 

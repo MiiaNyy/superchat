@@ -5,15 +5,13 @@ import firebase from "firebase";
 import getUserIcons from "../helpers/getIconImages";
 
 function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen, userData}) {
-    const {uid, displayName, photoURL} = auth.currentUser;
+    const {uid, displayName} = auth.currentUser;
+    const iconArr = getUserIcons();
 
     const [userName, setUserName] = useState('');
     const [userColor, setUserColor] = useState('');
     const [userIcon, setUserIcon] = useState('');
-
     const [loadingComplete, setLoadingComplete] = useState(false);
-
-    const iconArr = getUserIcons();
 
     useEffect(()=>{
         // Run this when page first renders
@@ -28,7 +26,6 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
         }
         setLoadingComplete(true);
     }, [])
-
 
     function submitSettings(e) {
         e.preventDefault();
@@ -105,14 +102,11 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
                     <div className="settings__cont settings__icons">
                         <p>Chat icon</p>
                         <div className="flex">
-                            <IconRadioBtn icon={ {name: 'default', img: photoURL} } userIcon={ userIcon }
-                                          setUserIcon={ setUserIcon }/>
                             { iconArr.map((icon)=>{
                                 return <IconRadioBtn icon={ icon } userIcon={ userIcon } setUserIcon={ setUserIcon }/>
                             }) }
                         </div>
                     </div>
-
 
                     <button className="btn btn__settings" type="submit">Save</button>
                 </form>

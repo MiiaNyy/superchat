@@ -1,9 +1,9 @@
-import blond from "../blond.png"
-import green_and_black_hair from "../green-and-black.png"
-import glasses_and_mustache from "../mustache.png"
-import summer_hat from "../summer-hat.png"
-import dino_head from "../dino-head.png"
-import black_hair from "../black-hair.png"
+import blond from "../assets/blond.png"
+import green_and_black_hair from "../assets/green-and-black.png"
+import glasses_and_mustache from "../assets/mustache.png"
+import summer_hat from "../assets/summer-hat.png"
+import dino_head from "../assets/dino-head.png"
+import black_hair from "../assets/black-hair.png"
 
 
 export default function getUserIcons() {

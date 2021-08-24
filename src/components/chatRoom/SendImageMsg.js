@@ -1,8 +1,8 @@
 import React from 'react';
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import firebase from "firebase";
 
-import spinner from "../spinner.svg";
+import spinner from "../../assets/spinner.svg";
 
 
 function SendImageMsg({currentUser}) {
