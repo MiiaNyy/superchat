@@ -12,7 +12,7 @@ import { Message, MessageContainer, SenderInfo, SentTime } from "./styledCompone
 import spinner from "../spinner.svg";
 import uniqid from "uniqid"
 
-function ChatRoom({userData}) {
+function ChatRoom({userData, logOff}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
 
@@ -29,7 +29,8 @@ function ChatRoom({userData}) {
                         <OnlineUsersList/>
                         <button className="btn btn__settings" onClick={ ()=>setUserSettingsOpen(true) }>Settings <i
                             className="fas fa-cog"/></button>
-                        <button className="btn btn__sign-out" onClick={ ()=>auth.signOut() }>Sign out</button>
+                        <button className="btn btn__sign-out" onClick={ ()=>logOff() }>Sign out
+                        </button>
                     </div>
                 </section>
             </>
@@ -54,11 +55,10 @@ function ChatRoom({userData}) {
     )
 }
 
-function ChatMessages({}) {
+function ChatMessages() {
     const scrollDownRef = useRef();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [scrollDown, setScrollDown] = useState(false);
 
     useEffect(()=>{
         db.collection('messages').orderBy('createdAt').limit(100)
@@ -151,17 +151,24 @@ function ChatMessage({message}) {
 
 function getMsgCreatedTime(timestamp) {
     const currentDate = new Date();
+    if ( timestamp ) {
+        const wholeDate = new Date(timestamp.seconds * 1000);
+        const year = wholeDate.getFullYear();
+        const month = wholeDate.getMonth();
+        const day = wholeDate.getDate();
+        const hour = wholeDate.getHours();
+        let minutes = wholeDate.getMinutes();
 
-    const wholeDate = new Date(timestamp * 1000);
-    const year = wholeDate.getFullYear();
-    const month = wholeDate.getMonth();
-    const day = wholeDate.getDate();
-
-    if ( currentDate.getMonth() === month && currentDate.getDate() === day ) {
-        return `${ wholeDate.getHours() }:${ wholeDate.getMinutes() }`
-    } else {
-        return `${ day }/${ month }/${ year }`
+        // If the message is send in the same day as today, return only time, else return date
+        if ( currentDate.getMonth() === month && currentDate.getDate() === day ) {
+            if ( minutes < 10 ) {
+                minutes = '0' + minutes
+            }
+            return `${ hour }:${ minutes }`
+        }
+        return `${ day }/${ month + 1 }/${ year }`
     }
+
 
 }
 

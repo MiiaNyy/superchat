@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from '../firebase'
@@ -7,7 +7,9 @@ import ChatRoom from "./ChatRoom";
 import UserSettingsForm from "./UserSettingsForm";
 
 import spinner from "../spinner.svg";
-import SignInSection from "./SignIn";
+import SignIn from "./SignIn";
+import { Main } from "./styledComponents/Styles";
+import firebase from "firebase";
 
 function App() {
     const [userData, setUserData] = useState();
@@ -16,8 +18,38 @@ function App() {
     const [firstLogin, setFirstLogin] = useState(false);
 
     const [user, loading] = useAuthState(auth); // true if firebase.User is logged in, false if not
+    const [gridOn, setGridOn] = useState(false); // main elements display grid. True on Chatroom, false anywhere else
 
-    const gridOn = loadingComplete && userSettingsSet ? 'grid' : '';
+    useEffect(()=>{
+
+        // Removes all messages from firestore messages database which are MORE than four days old
+        const timestamp = firebase.firestore.Timestamp.now();
+        let fourDaysAgo = timestamp.seconds - (96 * 60 * 60); // timestamp for four days ago
+
+        db.collection("messages").where("createdAt", ">", fourDaysAgo)
+            .get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                console.log(doc.id, " => ", doc.data());
+            });
+        })
+            .catch(function (error) {
+                console.log("Error getting documents: ", error);
+            });
+
+        db.collection("messages").where("createdAt", "<", fourDaysAgo)
+            .get().then(function (querySnapshot) {
+            querySnapshot.forEach(element=>{
+                element.ref.delete().then(r=>console.log('element successfully deleted'));
+            });
+        })
+    }, [])
+
+    function returnToDefaultStates() {
+        auth.signOut().then(r=>console.log('user has signed off'));
+        setUserSettingsSet(false);
+        setLoadingComplete(false);
+        setGridOn(false);
+    }
 
     function ChatRoomOrSettings() {
         if ( !firstLogin && !loadingComplete && !userSettingsSet ) { // default state. This should run first and only once
@@ -27,7 +59,8 @@ function App() {
             return <UserSettingsForm updatingSettings={ false } setUserData={ setUserData }
                                      userSettingsSet={ setUserSettingsSet }/>
         } else if ( loadingComplete && userSettingsSet ) {
-            return <ChatRoom userData={ userData }/>
+            setGridOn(true);
+            return <ChatRoom logOff={ returnToDefaultStates } userData={ userData }/>
         } else {
             return <img width={ 90 } height={ 90 } style={ {margin: "2em auto"} } src={ spinner } alt="loading"/>
         }
@@ -50,9 +83,9 @@ function App() {
     }
 
     return (
-        <main className={gridOn}>
-            { loading ? <LoadingSpinner/> : user ? <ChatRoomOrSettings/> : <SignInSection/> }
-        </main>
+        <Main grid={ gridOn }>
+            { loading ? <LoadingSpinner/> : user ? <ChatRoomOrSettings/> : <SignIn/> }
+        </Main>
     )
 }
 

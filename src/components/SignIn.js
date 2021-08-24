@@ -3,18 +3,26 @@ import React from "react";
 import firebase from "firebase";
 import { auth } from "../firebase";
 
-function SignInSection() {
+import { SignInSection } from "./styledComponents/Styles";
+
+function SignIn() {
 
     return (
-        <>
+        <SignInSection>
             <header>
-                <h1>Super Chat</h1>
+                <h1>Welcome to Super Chat</h1>
             </header>
-            <section className="signInSection">
-                <p>Please sign in</p>
-                <button onClick={ signInWithGoogle }>Sign in</button>
+            <section>
+                <p>So that you can start chatting with other users please sign in:</p>
+                <div onClick={ signInWithGoogle } className="google-btn">
+                    <div className="google-icon-wrapper">
+                        <img className="google-icon" alt="google logo"
+                             src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                    </div>
+                    <p className="btn-text"><b>Sign in with google</b></p>
+                </div>
             </section>
-        </>
+        </SignInSection>
     )
 }
 
@@ -42,4 +50,4 @@ function isMobileDevice() {
     }
 }
 
-export default SignInSection;
+export default SignIn;

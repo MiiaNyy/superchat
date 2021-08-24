@@ -13,24 +13,6 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-main {
-
-    width: 100%;
-    max-height: 100vh;
-    max-width: 700px;
-    background-color: #2d2d2d;
-    color: #e7e7e7;
-    border-radius: 20px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
-    transition: all 0.3s ease-in-out;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 200px repeat(2, 1fr);
-    grid-template-rows: 60px repeat(3, 1fr) 80px;
-}
-
 img {
     display: block;
     max-width: 100%;
@@ -113,13 +95,53 @@ span {
 }
 
 /* SIGN IN SECTION */
-.signInSection {
-    padding: 1em;
-    margin: 0 auto;
+.google-btn {
     width: 100%;
-    min-height: 200px;
-    text-align: center;
+    max-width: 200px;
+    height: 42px;
+    margin: 3em auto;
+    background-color: #4285f4;
+    border-radius: 2px;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .25);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
+
+.google-icon-wrapper {
+    position: absolute;
+    margin-top: 1px;
+    margin-left: 1px;
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: white;
+}
+
+.google-icon {
+    position: absolute;
+    margin-top: 11px;
+    margin-left: 11px;
+    width: 18px;
+    height: 18px;
+}
+
+.btn-text {
+    float: right;
+    margin: 11px 11px 0 5px;
+    color: white;
+    font-size: 0.8rem;
+    letter-spacing: 0.2px;
+    /*font-family: "Roboto";*/
+}
+
+.google-btn:hover {
+    box-shadow: 0 0 6px #4285f4;
+}
+
+.google-btn:active {
+    background: #1669F2;
+}
+
 
 /* CHATROOM */
 .chat__header, .sidebar {
