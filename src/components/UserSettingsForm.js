@@ -4,7 +4,14 @@ import firebase from "firebase";
 
 import getUserIcons from "../helpers/getIconImages";
 
-function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userSettingsOpen, userData}) {
+function UserSettingsForm({
+                              updatingSettings,
+                              userSettingsSet,
+                              setUserData,
+                              userSettingsOpen,
+                              userData,
+                              changeMessageSettings
+                          }) {
     const {uid, displayName} = auth.currentUser;
     const iconArr = getUserIcons();
 
@@ -29,30 +36,50 @@ function UserSettingsForm({updatingSettings, userSettingsSet, setUserData, userS
 
     function submitSettings(e) {
         e.preventDefault();
+        const userUpdates = {
+            chatName: userName === undefined || userName === '' ? getFirstName(displayName) : userName,
+            chatIcon: userIcon,
+            themeColor: userColor === undefined || userColor === '' ? 'pink' : userColor,
+        }
+
         if ( updatingSettings ) {
-            db.collection("users").doc(uid).update({
-                chatName: userName !== '' ? userName : getFirstName(displayName),
-                chatIcon: userIcon,
-                themeColor: userColor !== '' ? userColor : 'pink',
-            })
+            changeMessageSettings(true);
+            db.collection("users").doc(uid).update(userUpdates)
                 .then(()=>{
                     userSettingsOpen(()=>false);
                     setUserData((prev)=>{
-                        return {
+                        const notUpdatedInfo = {
                             createdAt: prev.createdAt,
                             lastSeen: prev.lastSeen,
-                            fullName: prev.fullName,
-                            chatName: userName !== '' ? userName : getFirstName(displayName),
-                            chatIcon: userIcon,
-                            themeColor: userColor !== '' ? userColor : 'pink',
+                            fullName: prev.fullName
                         }
+                        return {...notUpdatedInfo, ...userUpdates}
                     })
+                    changeSettingsForOlderMessages(userUpdates, changeMessageSettings);
                     console.log("User settings document successfully updated to collection!")
                 })
                 .catch((error)=>console.error("Error when updating user settings document: ", error));
         } else {
             firstTimeSubmittingSettings();
         }
+    }
+
+    function changeSettingsForOlderMessages(newSettingsObj, changeMessageSettings) {
+        firebase.firestore().collection("messages")
+            .where("uid", "==", uid)
+            .get()
+            .then((querySnapshot)=>{
+                querySnapshot.forEach((doc)=>{
+                    doc.ref.update({
+                        senderName: newSettingsObj.chatName,
+                        senderIcon: newSettingsObj.chatIcon,
+                        color: newSettingsObj.themeColor
+                    })
+                        .then(r=>console.log('message successfully updated'))
+                        .catch(e=>console.log('error happened while trying to update message:', e))
+                });
+                changeMessageSettings(false);
+            });
     }
 
     function firstTimeSubmittingSettings() {

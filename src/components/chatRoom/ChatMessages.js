@@ -6,7 +6,7 @@ import spinner from "../../assets/spinner.svg";
 import uniqid from "uniqid";
 
 
-function ChatMessages() {
+function ChatMessages({changingMessageSettings}) {
     const scrollDownRef = useRef();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ function ChatMessages() {
     }, [messages])
 
 
-    if ( loading ) {
+    if ( loading || changingMessageSettings ) {
         return (
             <section className="chat__messages">
                 <img width={ 90 } height={ 90 } style={ {margin: "2em auto"} } src={ spinner } alt="loading"/>

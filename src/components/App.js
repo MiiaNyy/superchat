@@ -5,9 +5,11 @@ import { auth, db } from '../firebase'
 
 import ChatRoom from "./chatRoom/ChatRoom";
 import UserSettingsForm from "./UserSettingsForm";
+import LoadingSpinner from "./loadingSpinner";
+import SignIn from "./SignIn";
 
 import spinner from "../assets/spinner.svg";
-import SignIn from "./SignIn";
+
 import { Main } from "./styledComponents/GeneralStyles";
 import firebase from "firebase";
 
@@ -87,11 +89,6 @@ function App() {
             { loading ? <LoadingSpinner/> : user ? <ChatRoomOrSettings/> : <SignIn/> }
         </Main>
     )
-}
-
-function LoadingSpinner() {
-    return <img width={ 90 } height={ 90 } style={ {margin: "2em auto", gridArea: "1/2/2/2"} } src={ spinner }
-                alt="loading"/>
 }
 
 

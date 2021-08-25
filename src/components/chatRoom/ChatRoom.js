@@ -8,6 +8,8 @@ function ChatRoom({userData, logOff}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
 
+    const [loading, setLoading] = useState(false);
+
     return (
         <>
             <header className="chat__header">
@@ -16,12 +18,15 @@ function ChatRoom({userData, logOff}) {
             </header>
 
             <Sidebar setUserSettingsOpen={ setUserSettingsOpen } logOff={ logOff }/>
-            <ChatMessages/>
+
+            <ChatMessages changingMessageSettings={ loading }/>
+
             <NewMessageForm currentUser={ currentUser }/>
 
             { userSettingsOpen ?
                 <UserSettingsForm updatingSettings={ true } userData={ userData } setUserData={ setCurrentUser }
-                                  userSettingsOpen={ setUserSettingsOpen }/> : <></> }
+                                  userSettingsOpen={ setUserSettingsOpen }
+                                  changeMessageSettings={ setLoading }/> : <></> }
         </>
     )
 }
