@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OnlineUsersList from "./OnlineUsersList";
 
 function Sidebar({logOff, setUserSettingsOpen}) {
+
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     return (
