@@ -1,9 +1,11 @@
-import { auth, db } from "../../firebase";
-import { Message, MessageContainer, SenderInfo, SentTime } from "../styledComponents/MessageStyles";
-import getUserIconImg from "../../helpers/getUserIconImg";
 import React, { useEffect, useRef, useState } from "react";
-import spinner from "../../assets/spinner.svg";
+import { auth, db } from "../../firebase";
+
 import uniqid from "uniqid";
+import getUserIconImg from "../../helpers/getUserIconImg";
+
+import spinner from "../../assets/spinner.svg";
+import { Message, MessageContainer, SenderInfo, SentTime } from "../styledComponents/MessageStyles";
 
 
 function ChatMessages({changingMessageSettings}) {
@@ -19,22 +21,28 @@ function ChatMessages({changingMessageSettings}) {
             })
     }, [])
 
-    // Scrolls last message to view when page first loads
+    // Scrolls when page first loads
     useEffect(()=>{
         if ( !loading ) {
             scrollDownRef.current.scrollIntoView({behavior: "smooth"});
         }
     }, [loading])
 
-    // Scrolls last message to view after new message arrives
+    // Scrolls after new message arrives
     useEffect(()=>{
         if ( !loading ) {
             scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
         }
     }, [messages])
 
+    // When user is changing their settings and press submit, set loading to true and after updating user settings
+    // to message documents are done change loading to false. So loading spinner is shown on the screen.
+    useEffect(()=>{
+        setLoading(!loading)
+    }, [changingMessageSettings])
 
-    if ( loading || changingMessageSettings ) {
+
+    if ( loading ) {
         return (
             <section className="chat__messages">
                 <img width={ 90 } height={ 90 } style={ {margin: "2em auto"} } src={ spinner } alt="loading"/>
@@ -44,9 +52,6 @@ function ChatMessages({changingMessageSettings}) {
         return (
             <section className="chat__messages">
                 { messages.map((msg, index)=>{
-                    if ( index === messages.length - 1 ) {
-                        console.log('last message found', msg.text)
-                    }
                     return <ChatMessage key={ uniqid() } message={ msg }/>
                 }) }
                 <div id="scrollDown" ref={ scrollDownRef }/>

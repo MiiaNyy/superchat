@@ -7,7 +7,6 @@ import Sidebar from "./Sidebar";
 function ChatRoom({userData, logOff}) {
     const [currentUser, setCurrentUser] = useState(userData);
     const [userSettingsOpen, setUserSettingsOpen] = useState(false);
-
     const [loading, setLoading] = useState(false);
 
     return (

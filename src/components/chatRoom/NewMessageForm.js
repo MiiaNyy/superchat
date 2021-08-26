@@ -19,7 +19,7 @@ function NewMessageForm({currentUser}) {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uid,
             photoURL,
-            color: currentUser.themeColor
+            color: currentUser.themeColor,
         }).then(r=>{
             console.log('New message successfully added to database')
         }).catch(error=>console.log('error happened when adding new message:', error))

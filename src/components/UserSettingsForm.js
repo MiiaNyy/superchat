@@ -3,6 +3,7 @@ import { auth, db } from "../firebase";
 import firebase from "firebase";
 
 import getUserIcons from "../helpers/getIconImages";
+import LoadingSpinner from "./loadingSpinner";
 
 function UserSettingsForm({
                               updatingSettings,
@@ -10,8 +11,10 @@ function UserSettingsForm({
                               setUserData,
                               userSettingsOpen,
                               userData,
-                              changeMessageSettings
+                              changeMessageSettings,
+                              moveToChatRoom,
                           }) {
+
     const {uid, displayName} = auth.currentUser;
     const iconArr = getUserIcons();
 
@@ -23,20 +26,19 @@ function UserSettingsForm({
     useEffect(()=>{
         // Run this when page first renders
         if ( updatingSettings ) {
-            setUserName(()=>userData.chatName)
+            setUserName(()=>userData.chatName);
             setUserColor(()=>userData.themeColor);
-            setUserIcon(()=>userData.chatIcon)
-            console.log('updating settings');
+            setUserIcon(()=>userData.chatIcon);
         } else {
-            console.log('first login')
             setUserName(()=>getFirstName(displayName))
+            setLoadingComplete(true);
         }
         setLoadingComplete(true);
     }, [])
 
     function submitSettings(e) {
         e.preventDefault();
-        const userUpdates = {
+        const formValues = {
             chatName: userName === undefined || userName === '' ? getFirstName(displayName) : userName,
             chatIcon: userIcon,
             themeColor: userColor === undefined || userColor === '' ? 'pink' : userColor,
@@ -44,24 +46,28 @@ function UserSettingsForm({
 
         if ( updatingSettings ) {
             changeMessageSettings(true);
-            db.collection("users").doc(uid).update(userUpdates)
-                .then(()=>{
-                    userSettingsOpen(()=>false);
-                    setUserData((prev)=>{
-                        const notUpdatedInfo = {
-                            createdAt: prev.createdAt,
-                            lastSeen: prev.lastSeen,
-                            fullName: prev.fullName
-                        }
-                        return {...notUpdatedInfo, ...userUpdates}
-                    })
-                    changeSettingsForOlderMessages(userUpdates, changeMessageSettings);
-                    console.log("User settings document successfully updated to collection!")
-                })
-                .catch((error)=>console.error("Error when updating user settings document: ", error));
+            updateUserSettings(formValues, changeMessageSettings);
         } else {
-            firstTimeSubmittingSettings();
+            firstTimeSubmittingSettings(formValues, moveToChatRoom);
         }
+    }
+
+    function updateUserSettings(formValues, changeMessageSettings) {
+        db.collection("users").doc(uid).update(formValues)
+            .then(()=>{
+                userSettingsOpen(()=>false);
+                setUserData((prev)=>{
+                    const notUpdatedInfo = {
+                        createdAt: prev.createdAt,
+                        lastSeen: prev.lastSeen,
+                        fullName: prev.fullName
+                    }
+                    return {...notUpdatedInfo, ...formValues};
+                })
+                changeSettingsForOlderMessages(formValues, changeMessageSettings);
+                console.log("User settings document successfully updated to collection!")
+            })
+            .catch((error)=>console.error("Error when updating user settings document: ", error));
     }
 
     function changeSettingsForOlderMessages(newSettingsObj, changeMessageSettings) {
@@ -82,21 +88,23 @@ function UserSettingsForm({
             });
     }
 
-    function firstTimeSubmittingSettings() {
+    function firstTimeSubmittingSettings(formValues, moveToChatRoom) {
+        userSettingsSet(true);
+
         const userDocument = {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
             fullName: displayName,
-            chatName: userName !== '' ? userName : getFirstName(displayName),
-            chatIcon: userIcon,
-            themeColor: userColor !== '' ? userColor : 'pink',
             uid,
+            chatName: formValues.chatName,
+            chatIcon: formValues.chatIcon,
+            themeColor: formValues.themeColor,
         };
         // First set changed to firebase
         db.collection("users").doc(uid).set(userDocument)
             .then(()=>{
                 setUserData(()=>userDocument); // set user data to user document, so it can be accessed later
-                userSettingsSet(true);
+                moveToChatRoom(true);
                 console.log("Document successfully added to collection!")
             })
             .catch((error)=>console.error("Error when adding user settings document: ", error));
@@ -108,7 +116,7 @@ function UserSettingsForm({
                 { updatingSettings ? <div className="close_cont"><i className="fas fa-times close-settings"
                                                                     onClick={ ()=>userSettingsSet(false) }/>
                 </div> : <></> }
-                <h2>Settings</h2>
+                <h2 style={ {marginTop: updatingSettings ? 'initial' : '1em'} }>{ updatingSettings ? 'Update' : 'Choose your user' } settings</h2>
                 <form onSubmit={ (e)=>submitSettings(e) }>
                     <div className="settings__cont">
                         <p>User name</p>
@@ -142,9 +150,7 @@ function UserSettingsForm({
         )
     } else {
         return (
-            <div className="pop-up">
-                <p>loading...</p>
-            </div>
+            <LoadingSpinner/>
         )
     }
 }

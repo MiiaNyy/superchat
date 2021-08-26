@@ -4,10 +4,11 @@ import getMessageClr from "../../helpers/getMessageClr";
 const Main = styled.main`
   width: 100%;
   max-height: 97vh;
+  min-height: 95vh;
   max-width: 700px;
-  display: ${ props=>props.grid ? 'grid' : 'block' };
-  grid-template-columns: ${ props=>props.grid ? '200px repeat(2, 1fr)' : 'none' };
-  grid-template-rows: ${ props=>props.grid ? '60px repeat(3, 1fr) 80px' : 'none' };
+  display: grid;
+  grid-template-columns: 200px repeat(2, 1fr);
+  grid-template-rows: 60px repeat(3, 1fr) 80px;
   background-color: #2d2d2d;
   color: #e7e7e7;
   border-radius: 20px;
@@ -45,7 +46,6 @@ const UserColor = styled.div`
   padding: 0.5em;
   border-radius: 50px;
   background-color: ${ props=>getMessageClr(props.color) };`;
-
 
 
 export {
