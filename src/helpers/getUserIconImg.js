@@ -1,8 +1,7 @@
 import getUserIcons from "./getIconImages";
-import { auth } from "../firebase";
+import black_hair from "../assets/black-hair.png" // default value
 
 export default function getUserIconImg(imgName) {
-    const {photoURL} = auth.currentUser;
     const icons = getUserIcons();
     let iconImg;
     for (let i = 0; i < icons.length; i++) {
@@ -11,6 +10,6 @@ export default function getUserIconImg(imgName) {
             iconImg = icon.img
         }
     }
-    return iconImg ? iconImg : photoURL;
+    return iconImg ? iconImg : black_hair;
 }
 

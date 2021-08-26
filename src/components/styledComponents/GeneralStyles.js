@@ -20,7 +20,6 @@ const SignInSection = styled.div`
   width: 100%;
   max-width: 500px;
   min-height: 300px;
-
   padding: 1em;
   margin: 0 auto;
   text-align: center;

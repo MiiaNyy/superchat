@@ -37,7 +37,6 @@ function App() {
         auth.signOut().then(r=>console.log('user has signed off'));
         setUserSettingsSet(false);
         setLoadingComplete(false);
-        setGridOn(false);
         setFirstLogin(false);
     }
 

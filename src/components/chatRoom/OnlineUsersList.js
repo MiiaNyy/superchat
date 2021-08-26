@@ -59,7 +59,6 @@ function OnlineUsersList() {
                     setLoadingComplete(true);
                 } else {
                     addNewUserDocument(setLoadingComplete);
-                    console.log("No such document! Creating one");
                 }
             }).catch((error)=>{
             console.log("Error getting document:", error);

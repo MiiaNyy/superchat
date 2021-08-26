@@ -25,7 +25,7 @@ function ChatRoom({userData, logOff}) {
             { userSettingsOpen ?
                 <UserSettingsForm updatingSettings={ true } userData={ userData } setUserData={ setCurrentUser }
                                   userSettingsOpen={ setUserSettingsOpen }
-                                  changeMessageSettings={ setLoading }/> : <></> }
+                                  loadingSpinnerOn={ setLoading }/> : <></> }
         </>
     )
 }

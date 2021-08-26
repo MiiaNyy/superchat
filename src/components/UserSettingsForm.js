@@ -6,12 +6,12 @@ import getUserIcons from "../helpers/getIconImages";
 import LoadingSpinner from "./loadingSpinner";
 
 function UserSettingsForm({
-                              updatingSettings,
-                              userSettingsSet,
-                              setUserData,
-                              userSettingsOpen,
+                              updatingSettings, // is user updating settings or setting them first time
+                              userSettingsSet, // user settings has been set
                               userData,
-                              changeMessageSettings,
+                              setUserData, // set current user data
+                              userSettingsOpen, // is settings pop uo open or closed
+                              loadingSpinnerOn, // adds loading spinner to screen when user is updating settings
                               moveToChatRoom,
                           }) {
 
@@ -31,7 +31,6 @@ function UserSettingsForm({
             setUserIcon(()=>userData.chatIcon);
         } else {
             setUserName(()=>getFirstName(displayName))
-            setLoadingComplete(true);
         }
         setLoadingComplete(true);
     }, [])
@@ -45,32 +44,33 @@ function UserSettingsForm({
         }
 
         if ( updatingSettings ) {
-            changeMessageSettings(true);
-            updateUserSettings(formValues, changeMessageSettings);
+            loadingSpinnerOn(true);
+            updateUserSettings(formValues, loadingSpinnerOn);
         } else {
             firstTimeSubmittingSettings(formValues, moveToChatRoom);
         }
     }
 
-    function updateUserSettings(formValues, changeMessageSettings) {
+    function updateUserSettings(formValues, loadingSpinnerOn) {
         db.collection("users").doc(uid).update(formValues)
             .then(()=>{
                 userSettingsOpen(()=>false);
                 setUserData((prev)=>{
-                    const notUpdatedInfo = {
+                    // data that does not need to be updated
+                    const prevData = {
                         createdAt: prev.createdAt,
                         lastSeen: prev.lastSeen,
                         fullName: prev.fullName
                     }
-                    return {...notUpdatedInfo, ...formValues};
+                    return {...prevData, ...formValues};
                 })
-                changeSettingsForOlderMessages(formValues, changeMessageSettings);
-                console.log("User settings document successfully updated to collection!")
+                changeSettingsForOlderMessages(formValues, loadingSpinnerOn);
             })
             .catch((error)=>console.error("Error when updating user settings document: ", error));
     }
 
-    function changeSettingsForOlderMessages(newSettingsObj, changeMessageSettings) {
+    // Gets all of the messages from database from current user and updates
+    function changeSettingsForOlderMessages(newSettingsObj, loadingSpinnerOn) {
         firebase.firestore().collection("messages")
             .where("uid", "==", uid)
             .get()
@@ -84,7 +84,7 @@ function UserSettingsForm({
                         .then(r=>console.log('message successfully updated'))
                         .catch(e=>console.log('error happened while trying to update message:', e))
                 });
-                changeMessageSettings(false);
+                loadingSpinnerOn(false);
             });
     }
 
@@ -114,7 +114,7 @@ function UserSettingsForm({
         return (
             <div className="pop-up">
                 { updatingSettings ? <div className="close_cont"><i className="fas fa-times close-settings"
-                                                                    onClick={ ()=>userSettingsSet(false) }/>
+                                                                    onClick={ ()=>userSettingsOpen(()=>false) }/>
                 </div> : <></> }
                 <h2 style={ {marginTop: updatingSettings ? 'initial' : '1em'} }>{ updatingSettings ? 'Update' : 'Choose your user' } settings</h2>
                 <form onSubmit={ (e)=>submitSettings(e) }>
