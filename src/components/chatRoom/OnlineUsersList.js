@@ -3,10 +3,7 @@ import { auth, db } from "../../firebase";
 import firebase from "firebase";
 
 import spinner from "../../assets/spinner.svg";
-import { UserColor } from "../styledComponents/GeneralStyles";
 import User from "./User";
-
-import getUserIconImg from "../../helpers/getUserIconImg";
 import objectsAreEqual from "../../helpers/objectsAreEqual";
 import uniqid from "uniqid";
 
@@ -80,11 +77,7 @@ function OnlineUsersList() {
         return (
             <div className="users__list">
                 <h2>Chat users </h2>
-                <div className="flex online__user">
-                    <UserColor color={ currentUser.themeColor }/>
-                    <img width={ 30 } height={ 30 } src={ getUserIconImg(currentUser.chatIcon) } alt="users icon"/>
-                    <p>You</p>
-                </div>
+                <User key={ uniqid() } user={ currentUser } currentUser={true}/>
                 { onlineUsers.map((user)=>{
                     return <User key={ uniqid() } user={ user }/>;
                 }) }
@@ -146,7 +139,6 @@ function addNewUserDocument(setLoadingComplete) {
             console.error("Error when adding document: ", error);
         });
 }
-
 
 
 export default OnlineUsersList;

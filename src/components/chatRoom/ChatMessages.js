@@ -44,17 +44,17 @@ function ChatMessages({changingMessageSettings}) {
 
     if ( loading ) {
         return (
-            <section className="chat__messages">
+            <section className="messages__container">
                 <img width={ 90 } height={ 90 } style={ {margin: "2em auto"} } src={ spinner } alt="loading"/>
             </section>
         )
     } else {
         return (
-            <section className="chat__messages">
+            <section className="messages__container">
                 { messages.map((msg, index)=>{
                     return <ChatMessage key={ uniqid() } message={ msg }/>
                 }) }
-                <div id="scrollDown" ref={ scrollDownRef }/>
+                <div ref={ scrollDownRef } style={ {padding: '0.5em'} }/>
             </section>
         )
     }
@@ -63,19 +63,19 @@ function ChatMessages({changingMessageSettings}) {
 function ChatMessage({message}) {
     const {text, uid, imageUrl, senderName, senderIcon, color, createdAt} = message;
     // Give different styling depending if msg is sent by current user or received
-    const messageClass = uid === auth.currentUser.uid ? 'msgSent' : 'msgReceived';
+    const messageClass = uid === auth.currentUser.uid ? 'msg__sent' : 'msg__received';
     const messageSentTime = getMsgCreatedTime(createdAt);
 
     if ( createdAt ) {
         return (
             <div className="message">
                 <SenderInfo info={ "name" }
-                            msgClass={ messageClass }>{ messageClass === 'msgSent' ? 'You' : senderName }</SenderInfo>
+                            msgClass={ messageClass }>{ messageClass === 'msg__sent' ? 'You' : senderName }</SenderInfo>
                 <MessageContainer msgClass={ messageClass }>
                     <img width={ 25 } height={ 25 } src={ getUserIconImg(senderIcon) }
                          alt={ `${ senderIcon } user icon` }/>
                     <Message msgClass={ messageClass } color={ color }>
-                        { imageUrl ? <img className="msgImg" src={ imageUrl } alt="sent image"/> :
+                        { imageUrl ? <img className="msg__img" src={ imageUrl } alt="image message"/> :
                             < p> { text }</p> }
                         <SentTime msgClass={ messageClass }>{ messageSentTime }</SentTime>
                     </Message>

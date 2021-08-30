@@ -6,30 +6,30 @@ const Message = styled.div`
   max-width: 90%;
   padding: 0.5em 0.7em;
   color: #212121;
-  border-radius: ${ props=>props.msgClass === "msgSent" ? "25px 25px 2px 25px" : "25px 25px 25px 2px" };
+  border-radius: ${ props=>props.msgClass === "msg__sent" ? "25px 25px 2px 25px" : "25px 25px 25px 2px" };
   background-color: ${ props=>getMessageClr(props.color) };
 `;
 
 const MessageContainer = styled.div`
   display: flex;
   align-items: flex-end;
-  flex-direction: ${ props=>props.msgClass === "msgSent" ? "row-reverse" : "row" };
+  flex-direction: ${ props=>props.msgClass === "msg__sent" ? "row-reverse" : "row" };
 `;
 
 const SenderInfo = styled.p`
   font-size: 0.7rem;
   font-style: italic;
-  margin-left: ${ props=>props.msgClass === "msgSent" ? "auto" : "3em" };
-  margin-right: ${ props=>props.msgClass === "msgSent" ? "3em" : "initial" };
-  text-align: ${ props=>props.msgClass === "msgSent" ? "right" : "left" };
+  margin-left: ${ props=>props.msgClass === "msg__sent" ? "auto" : "3em" };
+  margin-right: ${ props=>props.msgClass === "msg__sent" ? "3em" : "initial" };
+  text-align: ${ props=>props.msgClass === "msg__sent" ? "right" : "left" };
 `;
 
 const SentTime = styled(SenderInfo)`
   font-size: 0.6rem;
   color: black;
   letter-spacing: 1px;
-  margin-left: ${ props=>props.msgClass === "msgSent" ? "auto" : "0" };
-  margin-right: ${ props=>props.msgClass === "msgSent" ? "0" : "initial" };
+  margin-left: ${ props=>props.msgClass === "msg__sent" ? "auto" : "0" };
+  margin-right: ${ props=>props.msgClass === "msg__sent" ? "0" : "initial" };
 `;
 
 export {
