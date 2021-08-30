@@ -3,31 +3,36 @@
 .form-flex {
     display: flex;
     justify-content: center;
-    gap: 1em;
+    align-items: center;
     grid-area: 5 / 2 / 6 / 4;
-    padding: 1em 0;
+    padding: 0.4em 0 0;
     border-top: 2px solid #262626;
     border-bottom-right-radius: 20px;
     background-color: #2d2d2d;
 }
 
+
+
 .msg-form {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 5px;
     width: 100%;
 }
 
 .msg-form input {
     width: 100%;
-    padding: 1em;
+    padding: 0.5em;
     outline: none;
     border: 1px solid #343434;
     border-radius: 20px;
     background-color: rgb(58, 58, 62);
     color: #e7e7e7;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
     transition: all 0.2s ease-in-out;
 }
+
+
 
 .msg-form input:focus {
     box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
@@ -35,14 +40,16 @@
 }
 
 .msg-form button {
-    padding: 0.1em 0.5em;
-    margin-right: 1rem;
+    padding: 0.5em;
+    margin-right: 5px;
     border-radius: 50px;
-    font-size: 20px;
     border: 2px solid #6f778b;
     background-color: #343434;
     transition: all 0.3s ease-in-out;
+    font-size: 0.9rem;
 }
+
+
 
 .add-msg__icon {
     color: #6f778b;
@@ -61,12 +68,33 @@
 .img-form {
     display: flex;
     align-items: center;
-    margin-left: 1rem;
-    padding: 0.5em;
+    padding: 0.4em;
     background-color: #2D2D2D;
     border-radius: 50px;
     border: 2px solid #2D2D2D;
     transition: all 0.2s ease-in-out;
+}
+
+@media (min-width: 600px) {
+    .form-flex {
+        gap: 0.5em;
+    }
+
+    .msg-form {
+        gap: 1em;
+    }
+
+    .msg-form input {
+        padding: 1em;
+    }
+
+    .msg-form button {
+        margin-right: 1em;
+    }
+
+    .img-form {
+        margin-left: 1em;
+    }
 }
 
 .img-form:hover {

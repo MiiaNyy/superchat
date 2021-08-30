@@ -7,13 +7,17 @@ const Main = styled.main`
   min-height: 95vh;
   max-width: 700px;
   display: grid;
-  grid-template-columns: 200px repeat(2, 1fr);
-  grid-template-rows: 60px repeat(3, 1fr) 80px;
+  grid-template-columns: 50px repeat(2, 1fr);
+  grid-template-rows: 60px repeat(3, 1fr) 60px;
   background-color: #2d2d2d;
   color: #e7e7e7;
   border-radius: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
   transition: all 0.3s ease-in-out;
+  @media (min-width: 600px) {
+    grid-template-columns: 200px repeat(2, 1fr);
+    grid-template-rows: 60px repeat(3, 1fr) 80px;
+  }
 `;
 
 const SignInSection = styled.div`

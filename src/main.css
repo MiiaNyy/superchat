@@ -75,6 +75,7 @@ span {
     margin-bottom: 1em;
     border-radius: 5px;
     transition: all 0.2s ease-in-out;
+    font-size: 0.7rem;
 }
 
 .btn:hover {
@@ -96,6 +97,11 @@ span {
     max-height: 80%;
     min-height: 80%;
     overflow-y: auto;
+    font-size: 0.7rem;
+}
+
+.users__list h2 {
+    margin-bottom: 1em;
 }
 
 .online__user {
@@ -118,6 +124,7 @@ span {
     align-items: center;
     grid-area: 1 / 1 / 2 / 4;
     border-bottom: 2px solid #262626;
+    font-size: 0.9rem;
 }
 
 /* SIDEBAR */
@@ -163,6 +170,7 @@ span {
 }
 
 .message {
+    font-size: 0.8rem;
     margin-bottom: .5em;
 }
 
@@ -196,6 +204,25 @@ span {
 @media (min-width: 700px) {
     main {
         margin: .5em auto;
+    }
+
+    .chat__header {
+        font-size: 1rem;
+    }
+
+    .message {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 600px) {
+
+    .users__list {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
     }
 }
 

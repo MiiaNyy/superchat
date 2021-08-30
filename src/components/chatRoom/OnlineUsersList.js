@@ -47,8 +47,6 @@ function OnlineUsersList() {
     }, []);
 
     useEffect(()=>{
-        console.log('mounted');
-
         db.collection('users').doc(uid).get()
             .then((doc)=>{
                 if ( doc.exists ) {

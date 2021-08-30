@@ -11,8 +11,6 @@ function User({user, currentUser}) {
             <p>{ currentUser ? 'You' : user.chatName }</p>
         </div>
     )
-
-
 }
 
 export default User;

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import OnlineUsersList from "./OnlineUsersList";
 
 function Sidebar({logOff, setUserSettingsOpen}) {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const biggerScreen = window.innerWidth >= 600; // Different styles on mobile devices and bigger screens
+    const [sidebarOpen, setSidebarOpen] = useState(biggerScreen);
 
     return (
         <>
@@ -23,13 +24,9 @@ function Sidebar({logOff, setUserSettingsOpen}) {
 }
 
 function toggleSidebar(sidebarOpen, setSidebarOpen) {
-    if ( sidebarOpen ) {
-        document.querySelector("main").style.gridTemplateColumns = "50px repeat(2, 1fr)";
-        setSidebarOpen(false);
-    } else {
-        document.querySelector("main").style.gridTemplateColumns = "200px repeat(2, 1fr)";
-        setSidebarOpen(true);
-    }
+    const sidebarWidth = !sidebarOpen ? window.innerWidth >= 600 ? 200 : 150 : 50;
+    document.querySelector("main").style.gridTemplateColumns = `${ sidebarWidth }px repeat(2, 1fr)`;
+    setSidebarOpen(prev=>!prev);
 }
 
 export default Sidebar;

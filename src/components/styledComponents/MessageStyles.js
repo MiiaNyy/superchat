@@ -17,19 +17,25 @@ const MessageContainer = styled.div`
 `;
 
 const SenderInfo = styled.p`
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-style: italic;
   margin-left: ${ props=>props.msgClass === "msg__sent" ? "auto" : "3em" };
   margin-right: ${ props=>props.msgClass === "msg__sent" ? "3em" : "initial" };
   text-align: ${ props=>props.msgClass === "msg__sent" ? "right" : "left" };
+  @media (min-width: 700px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const SentTime = styled(SenderInfo)`
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   color: black;
   letter-spacing: 1px;
   margin-left: ${ props=>props.msgClass === "msg__sent" ? "auto" : "0" };
   margin-right: ${ props=>props.msgClass === "msg__sent" ? "0" : "initial" };
+  @media (min-width: 700px) {
+    font-size: 0.6rem;
+  }
 `;
 
 export {

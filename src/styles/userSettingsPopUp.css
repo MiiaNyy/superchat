@@ -8,7 +8,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-
+    font-size: 0.9rem;
     border-radius: 20px;
     border: 10px solid #1d1d1d;
     background-color: rgb(33, 33, 33);
@@ -16,6 +16,8 @@
     color: #a5a5a5;
     text-align: center;
 }
+
+
 
 .pop-up h2 {
     margin-top: -0.5em;
@@ -211,3 +213,8 @@
     color: #fa5959;
 }
 
+@media (min-width: 600px) {
+    .pop-up {
+        font-size: 1rem;
+    }
+}
