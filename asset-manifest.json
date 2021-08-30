@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/superchat/static/css/main.83a5a1e6.chunk.css",
+    "main.js": "/superchat/static/js/main.a9f0c37a.chunk.js",
+    "main.js.map": "/superchat/static/js/main.a9f0c37a.chunk.js.map",
+    "runtime-main.js": "/superchat/static/js/runtime-main.d045356b.js",
+    "runtime-main.js.map": "/superchat/static/js/runtime-main.d045356b.js.map",
+    "static/js/2.ff602053.chunk.js": "/superchat/static/js/2.ff602053.chunk.js",
+    "static/js/2.ff602053.chunk.js.map": "/superchat/static/js/2.ff602053.chunk.js.map",
+    "index.html": "/superchat/index.html",
+    "static/css/main.83a5a1e6.chunk.css.map": "/superchat/static/css/main.83a5a1e6.chunk.css.map",
+    "static/js/2.ff602053.chunk.js.LICENSE.txt": "/superchat/static/js/2.ff602053.chunk.js.LICENSE.txt",
+    "static/media/black-hair.68bdd4da.png": "/superchat/static/media/black-hair.68bdd4da.png",
+    "static/media/blond.9071513f.png": "/superchat/static/media/blond.9071513f.png",
+    "static/media/dino-head.35afc71d.png": "/superchat/static/media/dino-head.35afc71d.png",
+    "static/media/green-and-black.d9d39ac6.png": "/superchat/static/media/green-and-black.d9d39ac6.png",
+    "static/media/mustache.6c401d7b.png": "/superchat/static/media/mustache.6c401d7b.png",
+    "static/media/spinner.97b6fbc7.svg": "/superchat/static/media/spinner.97b6fbc7.svg",
+    "static/media/summer-hat.c46117c4.png": "/superchat/static/media/summer-hat.c46117c4.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d045356b.js",
+    "static/js/2.ff602053.chunk.js",
+    "static/css/main.83a5a1e6.chunk.css",
+    "static/js/main.a9f0c37a.chunk.js"
+  ]
+}
