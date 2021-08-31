@@ -28,7 +28,7 @@ function ChatRoom({userData, logOff}) {
                                   loadingSpinnerOn={ setLoading }/> : <></> }
         </>
     )
-}
 
+}
 
 export default ChatRoom;

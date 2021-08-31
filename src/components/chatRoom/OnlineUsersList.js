@@ -15,7 +15,7 @@ function OnlineUsersList() {
 
     const [currentUser, setCurrentUser] = useState();
     const [loadingComplete, setLoadingComplete] = useState(false);
-    const [timer, setTimer] = useState(0);
+
 
     const {uid} = auth.currentUser;
 
@@ -39,12 +39,6 @@ function OnlineUsersList() {
         }
     }, [usersData])
 
-    useEffect(()=>{
-        const interval = setInterval(()=>{
-            setTimer(prev=>prev + 1)
-        }, 20000);
-        return ()=>clearInterval(interval);
-    }, []);
 
     useEffect(()=>{
         db.collection('users').doc(uid).get()
@@ -61,24 +55,16 @@ function OnlineUsersList() {
         return ()=>console.log('unmounting...');
     }, []);
 
-    // Update user document every 20s, so other users can see if you are online or not
-    useEffect(()=>{
-        db.collection("users").doc(uid).update({
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-            .then(()=>console.log("Document successfully updated!"))
-            .catch((error)=>console.error("Error updating document: ", error)); // The document probably doesn't exist.
-    }, [timer]);
-
 
     if ( loadingComplete ) {
         return (
             <div className="users__list">
                 <h2>Chat users </h2>
-                <User key={ uniqid() } user={ currentUser } currentUser={true}/>
+                <User key={ uniqid() } user={ currentUser } currentUser={ true }/>
                 { onlineUsers.map((user)=>{
                     return <User key={ uniqid() } user={ user }/>;
                 }) }
+                <UpdateCurrentUser/>
             </div>
         );
     } else {
@@ -90,6 +76,29 @@ function OnlineUsersList() {
 
         )
     }
+}
+
+function UpdateCurrentUser() {
+    const [timer, setTimer] = useState(0);
+    const {uid} = auth.currentUser;
+
+    useEffect(()=>{
+        const interval = setInterval(()=>{
+            setTimer(prev=>prev + 1)
+        }, 20000);
+        return ()=>clearInterval(interval);
+    }, []);
+
+    // Update user document every 20s, so other users can see if you are online or not
+    useEffect(()=>{
+        db.collection("users").doc(uid).update({
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+            .then(()=>console.log("Document successfully updated!"))
+            .catch((error)=>console.error("Error updating document: ", error)); // The document probably doesn't exist.
+    }, [timer]);
+
+    return <></>
 }
 
 function checkIfUserIsOnline(user) {

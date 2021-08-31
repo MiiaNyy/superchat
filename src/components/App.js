@@ -27,14 +27,14 @@ function App() {
         db.collection("messages").where("createdAt", "<", fourDaysAgo)
             .get().then((querySnapshot)=>{
             querySnapshot.forEach(element=>{
-                element.ref.delete().then(r=>console.log('element successfully deleted'));
+                element.ref.delete().then(()=>console.log('element successfully deleted'));
             });
         })
     }, [])
 
     // When user signs out from chat, return states to they default states
     function returnToDefaultStates() {
-        auth.signOut().then(r=>console.log('user has signed off'));
+        auth.signOut().then(()=>console.log('user has signed off'));
         setUserSettingsSet(false);
         setLoadingComplete(false);
         setFirstLogin(false);
@@ -80,12 +80,19 @@ function App() {
             .catch((error)=>console.log('Error when getting user document first time', error));
     }
 
-//
-    return (
-        <Main>
-            { loading ? <LoadingSpinner/> : user ? <ChatRoomOrSettings/> : <SignIn/> }
-        </Main>
-    )
+    if ( loading ) {
+        return (
+            <Main grid={true}>
+                { <LoadingSpinner/> }
+            </Main>
+        )
+    } else {
+        return (
+            <Main grid={ user }>
+                { user ? <ChatRoomOrSettings/> : <SignIn/> }
+            </Main>
+        )
+    }
 }
 
 

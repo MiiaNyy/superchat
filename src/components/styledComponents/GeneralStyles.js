@@ -6,7 +6,7 @@ const Main = styled.main`
   max-height: 97vh;
   min-height: 95vh;
   max-width: 700px;
-  display: grid;
+  display: ${ props=>props.grid ? 'grid' : 'block' };
   grid-template-columns: 50px repeat(2, 1fr);
   grid-template-rows: 60px repeat(3, 1fr) 60px;
   background-color: #2d2d2d;
