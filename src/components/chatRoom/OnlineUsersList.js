@@ -85,11 +85,11 @@ function UpdateCurrentUser() {
     useEffect(()=>{
         const interval = setInterval(()=>{
             setTimer(prev=>prev + 1)
-        }, 20000);
+        }, 100000);
         return ()=>clearInterval(interval);
     }, []);
 
-    // Update user document every 20s, so other users can see if you are online or not
+    // Update user document every 1min, so other users can see if you are online or not
     useEffect(()=>{
         db.collection("users").doc(uid).update({
             lastSeen: firebase.firestore.FieldValue.serverTimestamp(),

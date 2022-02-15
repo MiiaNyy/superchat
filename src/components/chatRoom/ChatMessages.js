@@ -8,40 +8,41 @@ import spinner from "../../assets/spinner.svg";
 import { Message, MessageContainer, SenderInfo, SentTime } from "../styledComponents/MessageStyles";
 
 
-function ChatMessages({changingMessageSettings}) {
+function ChatMessages ({changingMessageSettings}) {
     const scrollDownRef = useRef();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    useEffect(()=>{
-        db.collection('messages').orderBy('createdAt').limit(100)
-            .onSnapshot((snapshot)=>{
-                setMessages(snapshot.docs.map(doc=>doc.data()));
-                setLoading(false);
-            })
+    
+    useEffect(() => {
+        console.log('messages loaded');
+        db.collection('messages').orderBy('createdAt').limit(50)
+          .onSnapshot((snapshot) => {
+              setMessages(snapshot.docs.map(doc => doc.data()));
+              setLoading(false);
+          })
     }, [])
-
-    // Scrolls when page first loads
-    useEffect(()=>{
+    
+    // Scrolls chatroom so newest message is at bottom when page first loads
+    useEffect(() => {
         if ( !loading ) {
             scrollDownRef.current.scrollIntoView({behavior: "smooth"});
         }
     }, [loading])
-
+    
     // Scrolls after new message arrives
-    useEffect(()=>{
+    useEffect(() => {
         if ( !loading ) {
             scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
         }
     }, [messages])
-
+    
     // When user is changing their settings and press submit, set loading to true and after updating user settings
     // to message documents are done change loading to false. So loading spinner is shown on the screen.
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(!loading)
     }, [changingMessageSettings])
-
-
+    
+    
     if ( loading ) {
         return (
             <section className="messages__container">
@@ -51,7 +52,7 @@ function ChatMessages({changingMessageSettings}) {
     } else {
         return (
             <section className="messages__container">
-                { messages.map((msg, index)=>{
+                { messages.map((msg, index) => {
                     return <ChatMessage key={ uniqid() } message={ msg }/>
                 }) }
                 <div ref={ scrollDownRef } style={ {padding: '0.5em'} }/>
@@ -60,12 +61,12 @@ function ChatMessages({changingMessageSettings}) {
     }
 }
 
-function ChatMessage({message}) {
+function ChatMessage ({message}) {
     const {text, uid, imageUrl, senderName, senderIcon, color, createdAt} = message;
     // Give different styling depending if msg is sent by current user or received
     const messageClass = uid === auth.currentUser.uid ? 'msg__sent' : 'msg__received';
     const messageSentTime = getMsgCreatedTime(createdAt);
-
+    
     if ( createdAt ) {
         return (
             <div className="message">
@@ -87,7 +88,7 @@ function ChatMessage({message}) {
     }
 }
 
-function getMsgCreatedTime(timestamp) {
+function getMsgCreatedTime (timestamp) {
     const currentDate = new Date();
     if ( timestamp ) {
         const wholeDate = new Date(timestamp.seconds * 1000);
@@ -96,7 +97,7 @@ function getMsgCreatedTime(timestamp) {
         const day = wholeDate.getDate();
         const hour = wholeDate.getHours();
         let minutes = wholeDate.getMinutes();
-
+        
         // If the message is send in the same day as today, return only time, else return date
         if ( currentDate.getMonth() === month && currentDate.getDate() === day ) {
             if ( minutes < 10 ) {
@@ -106,8 +107,8 @@ function getMsgCreatedTime(timestamp) {
         }
         return `${ day }/${ month + 1 }/${ year }`
     }
-
-
+    
+    
 }
 
 export default ChatMessages;
