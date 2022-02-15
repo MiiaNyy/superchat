@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { auth, db } from "../../firebase";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import SendImageMsg from "./SendImageMsg";
 
 function NewMessageForm ({currentUser}) {
+    // Value that is in the form
     const [formValue, setFormValue] = useState('');
     
     // writes new message document to firestore db
@@ -11,6 +12,7 @@ function NewMessageForm ({currentUser}) {
         e.preventDefault();
         const {uid} = auth.currentUser;
         try {
+            setFormValue(''); // empties the form
             await db.collection('messages').add({
                 senderName: currentUser.chatName,
                 senderIcon: currentUser.chatIcon,
@@ -19,12 +21,11 @@ function NewMessageForm ({currentUser}) {
                 uid,
                 color: currentUser.themeColor,
             })
-            setFormValue('');
-            console.log('New message successfully added to database')
         } catch (e) {
             console.log('error happened when adding new message:', e)
         }
     }
+    
     
     return (
         <section className="form-flex">
@@ -37,5 +38,6 @@ function NewMessageForm ({currentUser}) {
         </section>
     )
 }
+
 
 export default NewMessageForm;

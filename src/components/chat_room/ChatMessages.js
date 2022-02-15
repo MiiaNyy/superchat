@@ -5,8 +5,13 @@ import uniqid from "uniqid";
 import getUserIconImg from "../../helpers/getUserIconImg";
 
 import spinner from "../../assets/spinner.svg";
-import { Message, MessageContainer, SenderInfo, SentTime } from "../styledComponents/MessageStyles";
+import { Message, MessageContainer, SenderInfo, SentTime } from "../styled_components/MessageStyles";
 
+function scrollToBottom(loading, ref) {
+    if ( !loading ) {
+        ref.current.scrollIntoView({behavior: "smooth"});
+    }
+}
 
 function ChatMessages ({changingMessageSettings}) {
     const scrollDownRef = useRef();
@@ -24,16 +29,12 @@ function ChatMessages ({changingMessageSettings}) {
     
     // Scrolls chatroom so newest message is at bottom when page first loads
     useEffect(() => {
-        if ( !loading ) {
-            scrollDownRef.current.scrollIntoView({behavior: "smooth"});
-        }
+        scrollToBottom(loading, scrollDownRef);
     }, [loading])
     
     // Scrolls after new message arrives
     useEffect(() => {
-        if ( !loading ) {
-            scrollDownRef.current.scrollIntoView({behavior: 'smooth'});
-        }
+        scrollToBottom(loading, scrollDownRef);
     }, [messages])
     
     // When user is changing their settings and press submit, set loading to true and after updating user settings

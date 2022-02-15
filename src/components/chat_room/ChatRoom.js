@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UserSettingsForm from "../UserSettingsForm";
+import UserSettingsForm from "../user_settings/UserSettingsForm";
 import ChatMessages from "./ChatMessages";
 import NewMessageForm from "./NewMessageForm";
 import Sidebar from "./Sidebar";

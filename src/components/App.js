@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from '../firebase'
 
-import ChatRoom from "./chatRoom/ChatRoom";
-import UserSettingsForm from "./UserSettingsForm";
+import ChatRoom from "./chat_room/ChatRoom";
+import UserSettingsForm from "./user_settings/UserSettingsForm";
 import LoadingSpinner from "./loadingSpinner";
 import SignIn from "./SignIn";
 
-import { Main } from "./styledComponents/GeneralStyles";
+import { Main } from "./styled_components/GeneralStyles";
 
 function App () {
     const [currentUserData, setCurrentUserData] = useState();
