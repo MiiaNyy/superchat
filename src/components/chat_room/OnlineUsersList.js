@@ -42,19 +42,23 @@ function OnlineUsersList () {
         }
     }, [usersData])
     
+   
     
-    useEffect(async () => {
-        try {
-            const currentUserDoc = await db.collection('users').doc(uid).get();
-            if ( currentUserDoc.exists ) {
-                setCurrentUser(currentUserDoc.data());
-                setLoadingComplete(true);
-            } else {
-                addNewUserDocument(setLoadingComplete);
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const currentUserDoc = await db.collection('users').doc(uid).get();
+                if ( currentUserDoc.exists ) {
+                    setCurrentUser(currentUserDoc.data());
+                    setLoadingComplete(true);
+                } else {
+                    await addNewUserDocument(setLoadingComplete);
+                }
+            } catch (e) {
+                console.log('error happened when fetching current user document from db', e);
             }
-        } catch (e) {
-            console.log('error happened when fetching current user document from db', e);
         }
+        fetchData().then(r => console.log('data fetched'))
         return () => console.log('unmounting...');
     }, []);
     
@@ -92,14 +96,18 @@ function UpdateCurrentUser () {
     }, []);
     
     // Update user document every 1min, so other users can see if you are online or not
-    useEffect(async () => {
-        try {
-            await db.collection("users").doc(uid).update({
-                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-            })
-        } catch (e) {
-            console.error("Error updating document: ", e); // The document probably doesn't exist.
+    useEffect( () => {
+        async function updateUserDocument(){
+            try {
+                await db.collection("users").doc(uid).update({
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                })
+            } catch (e) {
+                console.error("Error updating document: ", e); // The document probably doesn't exist.
+            }
         }
+        updateUserDocument().then(r => console.log(''))
+        
     }, [timer]);
     
     return <></>

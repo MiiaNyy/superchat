@@ -25,10 +25,6 @@ function onMediaFileSelected(e, currentUser) {
 
     // Check if the file is an image.
     if ( !file.type.match('image.*') ) {
-        const data = {
-            message: 'You can only share images',
-            timeout: 2000
-        };
         return;
     }
     saveImageMessage(file, currentUser);

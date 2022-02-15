@@ -7,12 +7,6 @@ import getUserIconImg from "../../helpers/getUserIconImg";
 import spinner from "../../assets/spinner.svg";
 import { Message, MessageContainer, SenderInfo, SentTime } from "../styled_components/MessageStyles";
 
-function scrollToBottom(loading, ref) {
-    if ( !loading ) {
-        ref.current.scrollIntoView({behavior: "smooth"});
-    }
-}
-
 function ChatMessages ({changingMessageSettings}) {
     const scrollDownRef = useRef();
     const [messages, setMessages] = useState([]);
@@ -27,15 +21,12 @@ function ChatMessages ({changingMessageSettings}) {
           })
     }, [])
     
-    // Scrolls chatroom so newest message is at bottom when page first loads
+    // Scrolls chatroom so newest message is at bottom when page first loads and every time new message arrives
     useEffect(() => {
-        scrollToBottom(loading, scrollDownRef);
-    }, [loading])
-    
-    // Scrolls after new message arrives
-    useEffect(() => {
-        scrollToBottom(loading, scrollDownRef);
-    }, [messages])
+        if ( !loading ) {
+            scrollDownRef.current.scrollIntoView({behavior: "smooth"});
+        }
+    }, [loading, messages])
     
     // When user is changing their settings and press submit, set loading to true and after updating user settings
     // to message documents are done change loading to false. So loading spinner is shown on the screen.

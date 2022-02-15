@@ -5,7 +5,7 @@ import { auth, db } from '../firebase'
 
 import ChatRoom from "./chat_room/ChatRoom";
 import UserSettingsForm from "./user_settings/UserSettingsForm";
-import LoadingSpinner from "./loadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 import SignIn from "./SignIn";
 
 import { Main } from "./styled_components/GeneralStyles";

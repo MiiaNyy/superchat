@@ -10,6 +10,8 @@ function getMessageClr(clr) {
             return '#7e8ce0';
         case('blue'):
             return '#36c7d0';
+        default:
+            return '';
     }
 }
 
