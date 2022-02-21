@@ -42,8 +42,6 @@ function OnlineUsersList () {
         }
     }, [usersData])
     
-   
-    
     useEffect(() => {
         async function fetchData() {
             try {
