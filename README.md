@@ -6,7 +6,7 @@ to my projects.
 
 ### [LIVE VERSION](https://miianyy.github.io/superchat/)
 
-![two users chatting in the app](demo-image.png)
+![two users chatting in the app](demo-image.jpg)
 
 
 ## General
