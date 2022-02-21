@@ -4,7 +4,7 @@ This project's goal was to practice using Googles BAAS Firebase. I created a cha
 database, Firebase authentication and firebase realtime database. This was my first touch using and building the backend
 to my projects.
 
-### [LIVE VERSION]('https://miianyy.github.io/superchat/')
+### [LIVE VERSION](https://miianyy.github.io/superchat/)
 
 ![two users chatting in the app](demo-image.png)
 
